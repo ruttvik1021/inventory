@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { FormikProvider, useFormik } from "formik";
 import TextField from "@/components/textfield";
@@ -9,6 +9,7 @@ import { forgotPassword, userLogin, userSignUp } from "@/_api/unauthAPIs";
 import { IMessage, formTypes, messageEnums } from "@/contants";
 import LoginForm from "./loginForm";
 import CompanyInfoForm from "./companyInfoForm";
+import useAuth from "@/utils/useAuth";
 
 interface IModal {
   show: boolean;
@@ -23,6 +24,8 @@ interface IInitialValues {
 
 const LoginModal = ({ show, setShow, onBlur }: IModal) => {
   const cancelButtonRef = useRef(null);
+
+  const { isAuthenticated, loginUser, logoutUser } = useAuth();
   const [formType, setFormType] = useState(formTypes.LOGIN);
   const [message, setMessage] = useState<IMessage | null>({
     style: messageEnums.SUCCESS,
@@ -36,6 +39,7 @@ const LoginModal = ({ show, setShow, onBlur }: IModal) => {
       if (!body?.companyInfo) {
         setFormType(formTypes.COMPANY_INFO);
       }
+      loginUser(body?.token || null);
     } else {
       setMessage({
         style: messageEnums.ERROR,

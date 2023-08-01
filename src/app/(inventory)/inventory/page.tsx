@@ -1,4 +1,6 @@
+"use client";
 import React from "react";
+// import { useSession, getSession } from "next-auth/react";
 
 const getInventoryDashboardData = async () => {
   //   const { status, body } = await getInventoryData();
@@ -14,10 +16,16 @@ const getInventoryDashboardData = async () => {
 };
 
 const Inventory = async () => {
-  const data = await getInventoryDashboardData();
-  console.log(data);
+  // const { data: session, status } = useSession();
+  // console.log("session", {
+  //   session,
+  //   status,
+  // });
+  const data1 = await getInventoryDashboardData();
+  console.log(data1);
   return (
     <>
+      qwertyuiop
       {/* {data?.map((item: any, index: number) => (
         <div key={`${item.product}`}>{item.products}</div>
       ))} */}

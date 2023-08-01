@@ -2,6 +2,8 @@ import PrimaryNavbar from "@/components/primaryNavbar";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { AuthProvider } from "../utils/AuthContext";
+// import { ProtectedRoutes } from "@/utils/protectedRoutes";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,10 +20,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        {/* <I18nextProvider i18n={i18n}> */}
-        <PrimaryNavbar />
-        <main>{children}</main>
-        {/* </I18nextProvider> */}
+        <AuthProvider>
+          {/* <ProtectedRoutes> */}
+          <PrimaryNavbar />
+          <main>{children}</main>
+          {/* </ProtectedRoutes> */}
+        </AuthProvider>
       </body>
     </html>
   );
