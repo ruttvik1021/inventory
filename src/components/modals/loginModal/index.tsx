@@ -10,6 +10,8 @@ import { IMessage, formTypes, messageEnums } from "@/contants";
 import LoginForm from "./loginForm";
 import CompanyInfoForm from "./companyInfoForm";
 import useAuth from "@/utils/useAuth";
+import { IInitialAuthState } from "@/utils/AuthContext";
+import { useRouter } from "next/navigation";
 
 interface IModal {
   show: boolean;
@@ -24,8 +26,9 @@ interface IInitialValues {
 
 const LoginModal = ({ show, setShow, onBlur }: IModal) => {
   const cancelButtonRef = useRef(null);
+  const router = useRouter();
 
-  const { isAuthenticated, loginUser, logoutUser } = useAuth();
+  const { initialAuthState, setInitialAuthState, loginUser } = useAuth();
   const [formType, setFormType] = useState(formTypes.LOGIN);
   const [message, setMessage] = useState<IMessage | null>({
     style: messageEnums.SUCCESS,
@@ -37,7 +40,11 @@ const LoginModal = ({ show, setShow, onBlur }: IModal) => {
     if (status > 199 && status < 299) {
       loginFormik.resetForm();
       if (!body?.companyInfo) {
-        setFormType(formTypes.COMPANY_INFO);
+        setInitialAuthState({
+          ...initialAuthState,
+          companyInfoAvailable: false,
+        });
+        router.push("/organization-info");
       }
       loginUser(body?.token || null);
     } else {
@@ -120,27 +127,10 @@ const LoginModal = ({ show, setShow, onBlur }: IModal) => {
         return "Sign Up";
       case formTypes.FORGOT_PASSWORD:
         return "Forgot Password";
-      case formTypes.COMPANY_INFO:
-        return "Company Information";
     }
   };
 
   const loginFormik = useFormik({
-    initialValues: {
-      email: "",
-      password: "",
-    },
-    validationSchema: Yup.object().shape({
-      email: Yup.string().email().required("Required"),
-      password: setPasswordYup(),
-    }),
-    onSubmit: (values) => {
-      setMessage(null);
-      apiCall(values);
-    },
-  });
-
-  const organizationFormik = useFormik({
     initialValues: {
       email: "",
       password: "",
@@ -199,25 +189,14 @@ const LoginModal = ({ show, setShow, onBlur }: IModal) => {
                   {getTitle()}
                 </p>
               </div>
-              {formType !== formTypes.COMPANY_INFO ? (
-                <FormikProvider value={loginFormik}>
-                  <LoginForm
-                    formik={loginFormik}
-                    formType={formType}
-                    setFormType={setFormType}
-                    message={message}
-                  />
-                </FormikProvider>
-              ) : (
-                <FormikProvider value={organizationFormik}>
-                  <CompanyInfoForm
-                    formik={loginFormik}
-                    formType={formType}
-                    setFormType={setFormType}
-                    message={message}
-                  />
-                </FormikProvider>
-              )}
+              <FormikProvider value={loginFormik}>
+                <LoginForm
+                  formik={loginFormik}
+                  formType={formType}
+                  setFormType={setFormType}
+                  message={message}
+                />
+              </FormikProvider>
             </div>
           </Transition.Child>
         </div>

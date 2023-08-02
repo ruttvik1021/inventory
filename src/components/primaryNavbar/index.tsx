@@ -4,14 +4,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { pageRoutes } from "@/contants/pageroutes";
 import SignInButton from "../signIn";
-// import { useRouter } from "next/navigation";
 import useAuth from "@/utils/useAuth";
 import PrimaryButton from "../primaryButton";
 import NavLinks from "./navLinks";
-import { ProtectedRoutes } from "@/utils/protectedRoutes";
 
 const PrimaryNavbar = () => {
-  const { isAuthenticated, logoutUser } = useAuth();
+  const { initialAuthState, logoutUser } = useAuth();
+
   return (
     <>
       <nav className="flex justify-between items-center p-3 px-5">
@@ -22,14 +21,13 @@ const PrimaryNavbar = () => {
         </div>
         <div className="flex justify-center">
           <ul className="xl:flex hidden text-sm gap-7">
-            <ProtectedRoutes>
-              {isAuthenticated &&
-                pageRoutes.map(({ label, href }: any, index: number) => (
-                  <NavLinks label={label} href={href} index={index} />
-                ))}
-            </ProtectedRoutes>
+            {initialAuthState.isAuthenticated &&
+              initialAuthState.companyInfoAvailable &&
+              pageRoutes.map(({ label, href }: any, index: number) => (
+                <NavLinks label={label} href={href} index={index} />
+              ))}
           </ul>
-          {!isAuthenticated ? (
+          {!initialAuthState.isAuthenticated ? (
             <SignInButton />
           ) : (
             <PrimaryButton text={"Sign Out"} onClick={() => logoutUser()} />

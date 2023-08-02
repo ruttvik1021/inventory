@@ -3,7 +3,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { AuthProvider } from "../utils/AuthContext";
-// import { ProtectedRoutes } from "@/utils/protectedRoutes";
+import { ProtectedRoutes } from "@/utils/protectedRoutes";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,10 +21,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <AuthProvider>
-          {/* <ProtectedRoutes> */}
-          <PrimaryNavbar />
-          <main>{children}</main>
-          {/* </ProtectedRoutes> */}
+          <ProtectedRoutes>
+            <PrimaryNavbar />
+            <main>{children}</main>
+          </ProtectedRoutes>
         </AuthProvider>
       </body>
     </html>

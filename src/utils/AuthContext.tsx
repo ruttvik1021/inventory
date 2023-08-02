@@ -1,46 +1,68 @@
 "use client";
 import React, { createContext, useState, useEffect } from "react";
 import Cookie from "js-cookie";
+import { useRouter } from "next/navigation";
 
-type AuthContextValue = {
+interface IAuthContext {
+  initialAuthState: IInitialAuthState;
+  loginUser: (token: string) => void;
+  logoutUser: () => void;
+  setInitialAuthState: (prev: IInitialAuthState) => void;
+}
+
+const AuthContext = createContext<IAuthContext>({
+  initialAuthState: { isAuthenticated: false, companyInfoAvailable: false },
+  loginUser: (token: string) => {}, // Provide a dummy implementation or leave it undefined
+  logoutUser: () => {}, // Provide a dummy implementation or leave it undefined
+  setInitialAuthState: (prev: IInitialAuthState) => {},
+});
+
+export interface IInitialAuthState {
   isAuthenticated: boolean;
-  loginUser: any;
-  logoutUser: any;
-};
-
-const AuthContext = createContext<any>({
-  isAuthenticated: false,
-  loginUser: null,
-  logoutUser: null,
-}); // create context here
+  companyInfoAvailable: boolean;
+}
 
 const AuthProvider = ({ children }: any) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const router = useRouter();
+  const [initialAuthState, setInitialAuthState] = useState<IInitialAuthState>({
+    isAuthenticated: false,
+    companyInfoAvailable: false,
+  });
 
   useEffect(() => {
     const hasAccess = Cookie.get("token"); // the name used to store the user’s token in localstorage
-
     if (hasAccess) {
-      setIsAuthenticated(true);
+      setInitialAuthState((prev: IInitialAuthState) => ({
+        ...prev,
+        isAuthenticated: true,
+      }));
     }
   }, []);
 
   const loginUser = (token: any) => {
     Cookie.set("token", token, {
-      expires: 14,
+      expires: 12,
       secure: true,
       sameSite: "strict",
     }); // to secure the token
-    setIsAuthenticated(true);
+    setInitialAuthState((prev: IInitialAuthState) => ({
+      ...prev,
+      isAuthenticated: true,
+    }));
   };
 
   const logoutUser = () => {
     Cookie.remove("token");
-    setIsAuthenticated(false);
+    setInitialAuthState((prev: IInitialAuthState) => ({
+      ...prev,
+      isAuthenticated: false,
+    }));
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, loginUser, logoutUser }}>
+    <AuthContext.Provider
+      value={{ initialAuthState, loginUser, logoutUser, setInitialAuthState }}
+    >
       {children}
     </AuthContext.Provider>
   );
