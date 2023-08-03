@@ -8,7 +8,7 @@ import * as Yup from "yup";
 import { forgotPassword, userLogin, userSignUp } from "@/_api/unauthAPIs";
 import { IMessage, formTypes, messageEnums } from "@/contants";
 import LoginForm from "./loginForm";
-import CompanyInfoForm from "./companyInfoForm";
+// import CompanyInfoForm from "./companyInfoForm";
 import useAuth from "@/utils/useAuth";
 import { IInitialAuthState } from "@/utils/AuthContext";
 import { useRouter } from "next/navigation";
