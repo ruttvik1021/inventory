@@ -10,6 +10,7 @@ const authUrls = {
   currentUser: "/api/auth/currentuser",
   completeProfile: "/api/auth/completeprofile",
   forgotPassword: "/api/auth/forgotpassword",
+  countryList: "/api/auth/countryList",
 };
 
 export { baseUrls, authUrls };

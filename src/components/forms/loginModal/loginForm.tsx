@@ -6,7 +6,7 @@ interface ILoginForm {
   formik: any;
   formType: string;
   setFormType: any;
-  message: IMessage | null;
+  message?: IMessage | null;
 }
 const LoginForm = ({ formik, formType, setFormType, message }: ILoginForm) => {
   return (

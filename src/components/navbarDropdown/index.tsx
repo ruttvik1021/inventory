@@ -12,16 +12,17 @@ interface IDropOptions {
 
 interface IProps {
   options: IDropOptions[];
+  orgLogo: string;
 }
 
-const NavDropDown = ({ options }: IProps) => {
+const NavDropDown = ({ options, orgLogo }: IProps) => {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
         <Menu.Button className="">
           <img
             className="h-10 w-10 flex-none rounded-full bg-gray-50"
-            src={""}
+            src={orgLogo}
             alt="Profile"
           />
         </Menu.Button>
@@ -38,11 +39,12 @@ const NavDropDown = ({ options }: IProps) => {
       >
         <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="py-1">
-            {options.map((item: IDropOptions) => (
+            {options.map((item: IDropOptions, index: number) => (
               <Menu.Item>
                 {({ active }) => (
                   <a
                     onClick={item.onClick}
+                    key={`${item.label}-${index}`}
                     className={classNames(
                       active ? "bg-gray-100 text-gray-900" : "text-gray-700",
                       "block px-4 py-2 text-sm hover:bg-indigo-200 cursor-pointer"

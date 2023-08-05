@@ -10,6 +10,7 @@ export interface IOrganizationInformation {
   organizationLogo: string;
   mobileNumber: string;
   address: string;
+  email: string;
 }
 
 export const OrganizationInitialValues: IOrganizationInformation = {
@@ -19,12 +20,17 @@ export const OrganizationInitialValues: IOrganizationInformation = {
   organizationLogo: "",
   mobileNumber: "",
   address: "",
+  email: "",
 };
 
 export const OrganizationYup = Yup.object().shape({
   organizationName: Yup.string().required("Required"),
   retailType: Yup.string().required("Required"),
-  firstName: Yup.string().max(30, "Max 30 characters").required("Required"),
-  organizationLogo: Yup.string().required("Required"),
+  name: Yup.string().max(30, "Max 30 characters").required("Required"),
+  organizationLogo: Yup.string(),
   address: Yup.string().required("Required"),
+  email: Yup.string().email().required("Required"),
+  mobileNumber: Yup.string()
+    .matches(/^\d{10}$/, "Phone number must be exactly 10 digits")
+    .required("Phone number is required"),
 });

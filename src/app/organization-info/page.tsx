@@ -1,5 +1,6 @@
 "use client";
-import { getCurrentUserApi } from "@/_api/auth";
+import { getCurrentUserApi, updateOrgInfoAPI } from "@/_api/auth";
+import { getCountryListApi } from "@/_api/unauthAPIs";
 import {
   IOrganizationInformation,
   OrganizationInitialValues,
@@ -8,67 +9,70 @@ import {
 import OrgForm from "@/components/forms/organizationForm/form";
 import ImagePicker from "@/components/forms/organizationForm/imagePicker";
 import { AuthContext } from "@/utils/context/AuthContext";
+import useAuth from "@/utils/context/useAuth";
 import { FormikProvider, useFormik } from "formik";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import toast from "react-hot-toast";
 
 const OrgInfo = () => {
+  const { initialAuthState, setInitialAuthState } = useAuth();
+  const router = useRouter();
   const organizationFormik = useFormik<IOrganizationInformation>({
     initialValues: OrganizationInitialValues,
     // validationSchema: OrganizationYup,
     onSubmit: (values: any) => {
-      console.log("userDetails", values);
+      updateOrganizatioInfo(values);
     },
   });
 
-  //   {
-  //     organizationName: "",
-  //     retailType: "",
-  //     name: ""
-  //     organizationLogo: "",
-  //     mobileNumber: "",
-  //     address: "",
-  //   };
+  const getCountryList = async () => {
+    const { status, body } = await getCountryListApi();
+    if (status > 199 && status < 299) {
+      console.log(body.countryList);
+    }
+  };
 
-  //   interface ICompleteForm {
-  //     organizationName: string;
-  //     organizationLogo: string;
-  //     name: string;
-  //     profileCompleted: boolean;
-  //     termAccepted: boolean;
-  //     mobileNumber: string;
-  //     retailTypeId: string;
-  //     retailType: string;
-  //     email: string;
-  //     aboutus?: string;
-  //   }
-
-  //   {
-  //     "_id": "64c5fbf5f819952736bf7db4",
-  //     "email": "ruttvik@mail.com",
-  //     "name": "",
-  //     "organizationLogo": "",
-  //     "organizationName": "",
-  //     "retailTypeId": "",
-  //     "organizationId": "64c5fbeaf819952736bf7db2",
-  //     "profileCompleted": false,
-  //     "termAccepted": false,
-  //     "mobileNumber": "",
-  //     "retailType": "",
-  //     "__v": 0
-  // }
+  const updateOrganizatioInfo = async (values: any) => {
+    try {
+      const { status, body } = await updateOrgInfoAPI(values);
+      if (status === 200) {
+        setInitialAuthState({
+          ...initialAuthState,
+          companyInfoAvailable: true,
+          organizationLogo: body.body.organizationLogo,
+        });
+        toast.success("Profile updated Successfully");
+        router.push("/home");
+      } else {
+        toast.error(body?.message ? body?.message : "Something went wrong");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const getCurrentUser = async () => {
     const { status, body } = await getCurrentUserApi();
-    organizationFormik.setFieldValue("organizationName", body.organizationName);
-    organizationFormik.setFieldValue("email", body.email);
-    organizationFormik.setFieldValue("organizationName", body.organizationName);
+    if (status === 200) {
+      const filteredData = Object.keys(organizationFormik.initialValues).reduce(
+        (acc: any, key: any) => {
+          if (body.hasOwnProperty(key)) {
+            acc[key] = body[key];
+          }
+          return acc;
+        },
+        {}
+      );
+      organizationFormik.setValues(filteredData);
+    }
   };
 
-  useEffect(() => {
-    getCurrentUser();
-  }, []);
+  // useEffect(() => {
+  //   getCurrentUser();
+  // }, []);
   return (
-    <>
+    <div>
       <form className="space-y-6" onSubmit={organizationFormik.handleSubmit}>
         <FormikProvider value={organizationFormik}>
           <div className="px-5">
@@ -76,7 +80,7 @@ const OrgInfo = () => {
           </div>
         </FormikProvider>
       </form>
-    </>
+    </div>
   );
 };
 

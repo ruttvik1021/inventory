@@ -63,7 +63,10 @@ const PrimaryNavbar = () => {
             ) : (
               <>
                 <div className="xl:hidden lg:hidden md:hidden block">
-                  <NavDropDown options={dropDownOptionList} />
+                  <NavDropDown
+                    options={dropDownOptionList}
+                    orgLogo={initialAuthState.organizationLogo}
+                  />
                 </div>
                 <div className="xl:block lg:block md:block hidden">
                   <NavDropDown
@@ -76,6 +79,7 @@ const PrimaryNavbar = () => {
                       }),
                       signOutOption,
                     ]}
+                    orgLogo={initialAuthState.organizationLogo}
                   />
                 </div>
               </>

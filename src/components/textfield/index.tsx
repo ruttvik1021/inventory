@@ -8,6 +8,7 @@ interface ITextField {
   name: string;
   placeholder: string;
   disabled?: boolean;
+  maxLength?: number;
 }
 
 const TextField = ({
@@ -17,6 +18,7 @@ const TextField = ({
   name,
   placeholder,
   disabled,
+  maxLength,
 }: ITextField) => {
   return (
     <>
@@ -24,12 +26,12 @@ const TextField = ({
       {required && <span className="text-red-600 ml-1">*</span>}
       <Field name={name}>
         {({ field, meta }: any) => (
-          //   <>
           <div>
             <input
               type={type}
               {...field}
               disabled={disabled}
+              maxLength={maxLength}
               autoComplete="false"
               placeholder={placeholder}
               className={`mt-2 block w-full rounded-md border-0 py-1.5 px-3 ${
@@ -40,7 +42,6 @@ const TextField = ({
               <div className="text-sm text-red-600">{meta.error}</div>
             )}
           </div>
-          //   </>
         )}
       </Field>
     </>

@@ -3,6 +3,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { AuthProvider } from "../utils/context/AuthContext";
 import { ProtectedRoutes } from "@/utils/context/protectedRoutes";
+import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
   title: "Inventory",
@@ -21,6 +22,7 @@ export default function RootLayout({
           <ProtectedRoutes>
             <PrimaryNavbar />
             <main className="p-5">{children}</main>
+            <Toaster />
           </ProtectedRoutes>
         </AuthProvider>
       </body>

@@ -4,6 +4,7 @@ import Cookie from "js-cookie";
 import { useRouter } from "next/navigation";
 import jwt from "jsonwebtoken";
 import { navRoutes } from "@/contants/pageroutes";
+import { getCurrentUserApi } from "@/_api/auth";
 
 interface IAuthContext {
   initialAuthState: IInitialAuthState;
@@ -16,6 +17,7 @@ const AuthContext = createContext<IAuthContext>({
   initialAuthState: {
     isAuthenticated: false,
     companyInfoAvailable: false,
+    organizationLogo: "",
     // permittedRoutes: navRoutes,
   },
   loginUser: (token: string) => {}, // Provide a dummy implementation or leave it undefined
@@ -26,6 +28,7 @@ const AuthContext = createContext<IAuthContext>({
 export interface IInitialAuthState {
   isAuthenticated: boolean;
   companyInfoAvailable: boolean;
+  organizationLogo: string;
   // permittedRoutes: Array<any>;
 }
 
@@ -33,18 +36,26 @@ const AuthProvider = ({ children }: any) => {
   const [initialAuthState, setInitialAuthState] = useState<IInitialAuthState>({
     isAuthenticated: false,
     companyInfoAvailable: false,
+    organizationLogo: "",
     // permittedRoutes: navRoutes,
   });
+
+  const getUserDetails = async () => {
+    const { status, body } = await getCurrentUserApi();
+    if (status === 200) {
+      setInitialAuthState((prev: IInitialAuthState) => ({
+        ...prev,
+        isAuthenticated: true,
+        companyInfoAvailable: body.profileCompleted,
+        organizationLogo: body.organizationLogo,
+      }));
+    }
+  };
 
   useEffect(() => {
     const hasAccess = Cookie.get("token"); // the name used to store the user’s token in localstorage
     if (hasAccess) {
-      const { companyInfo }: any = jwt.decode(hasAccess);
-      setInitialAuthState((prev: IInitialAuthState) => ({
-        ...prev,
-        isAuthenticated: true,
-        companyInfoAvailable: companyInfo,
-      }));
+      getUserDetails();
     }
   }, []);
 

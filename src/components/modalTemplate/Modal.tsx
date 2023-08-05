@@ -52,7 +52,7 @@ const Modal = ({
             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
-            <div className="p-8 w-1/3 relative bg-white rounded-3xl">
+            <div className="p-8 xl:w-1/3 md:w-1/2 lg:w-1/3 relative bg-white rounded-3xl">
               <div className="absolute top-3 right-3 w-8">
                 <CloseIcon
                   className="absolute top-3 right-3 w-8 cursor-pointer"

@@ -10,6 +10,8 @@ import LoginForm from "./loginForm";
 import Modal from "@/components/modalTemplate/Modal";
 import useAuth from "@/utils/context/useAuth";
 import { useRouter } from "next/navigation";
+import { getCurrentUserApi } from "@/_api/auth";
+import toast from "react-hot-toast";
 
 interface IModal {
   show: boolean;
@@ -27,27 +29,23 @@ const LoginModal = ({ show, setShow, onBlur }: IModal) => {
 
   const { initialAuthState, setInitialAuthState, loginUser } = useAuth();
   const [formType, setFormType] = useState(formTypes.LOGIN);
-  const [message, setMessage] = useState<IMessage | null>({
-    style: messageEnums.SUCCESS,
-    message: "",
-  });
 
   const userLoginApi = async (values: IInitialValues) => {
     const { status, body } = await userLogin(values);
     if (status > 199 && status < 299) {
       loginFormik.resetForm();
+      const orgDetails = await getCurrentUserApi();
       setInitialAuthState({
         ...initialAuthState,
         isAuthenticated: true,
         companyInfoAvailable: body?.companyInfo,
+        organizationLogo: orgDetails.body.organizationLogo,
       });
       setShow(false);
+      toast.success("Login Successful");
       loginUser(body?.token || null);
     } else {
-      setMessage({
-        style: messageEnums.ERROR,
-        message: body.message,
-      });
+      toast.error(body.message);
     }
   };
 
@@ -56,15 +54,9 @@ const LoginModal = ({ show, setShow, onBlur }: IModal) => {
     if (status > 199 && status < 299) {
       loginFormik.resetForm();
       setFormType(formTypes.LOGIN);
-      setMessage({
-        style: messageEnums.SUCCESS,
-        message: body.message,
-      });
+      toast.success(body.message);
     } else {
-      setMessage({
-        style: messageEnums.ERROR,
-        message: body.message,
-      });
+      toast.error(body.message);
     }
   };
 
@@ -74,11 +66,9 @@ const LoginModal = ({ show, setShow, onBlur }: IModal) => {
     if (status > 199 && status < 299) {
       loginFormik.resetForm();
       setFormType(formTypes.LOGIN);
+      toast.success(body.message);
     } else {
-      setMessage({
-        style: messageEnums.ERROR,
-        message: body.message,
-      });
+      toast.error(body.message);
     }
   };
 
@@ -140,7 +130,6 @@ const LoginModal = ({ show, setShow, onBlur }: IModal) => {
       password: setPasswordYup(),
     }),
     onSubmit: (values) => {
-      setMessage(null);
       apiCall(values);
     },
   });
@@ -157,7 +146,6 @@ const LoginModal = ({ show, setShow, onBlur }: IModal) => {
           formik={loginFormik}
           formType={formType}
           setFormType={setFormType}
-          message={message}
         />
       </FormikProvider>
     </Modal>
