@@ -1,11 +1,8 @@
 import PrimaryNavbar from "@/components/primaryNavbar";
 import "./globals.css";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import { AuthProvider } from "../utils/AuthContext";
-import { ProtectedRoutes } from "@/utils/protectedRoutes";
-
-const inter = Inter({ subsets: ["latin"] });
+import { AuthProvider } from "../utils/context/AuthContext";
+import { ProtectedRoutes } from "@/utils/context/protectedRoutes";
 
 export const metadata: Metadata = {
   title: "Inventory",
@@ -19,11 +16,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className="bg-white">
         <AuthProvider>
           <ProtectedRoutes>
             <PrimaryNavbar />
-            <main>{children}</main>
+            <main className="p-5">{children}</main>
           </ProtectedRoutes>
         </AuthProvider>
       </body>

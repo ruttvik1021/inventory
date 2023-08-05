@@ -2,6 +2,8 @@
 import React, { createContext, useState, useEffect } from "react";
 import Cookie from "js-cookie";
 import { useRouter } from "next/navigation";
+import jwt from "jsonwebtoken";
+import { navRoutes } from "@/contants/pageroutes";
 
 interface IAuthContext {
   initialAuthState: IInitialAuthState;
@@ -11,7 +13,11 @@ interface IAuthContext {
 }
 
 const AuthContext = createContext<IAuthContext>({
-  initialAuthState: { isAuthenticated: false, companyInfoAvailable: false },
+  initialAuthState: {
+    isAuthenticated: false,
+    companyInfoAvailable: false,
+    // permittedRoutes: navRoutes,
+  },
   loginUser: (token: string) => {}, // Provide a dummy implementation or leave it undefined
   logoutUser: () => {}, // Provide a dummy implementation or leave it undefined
   setInitialAuthState: (prev: IInitialAuthState) => {},
@@ -20,21 +26,24 @@ const AuthContext = createContext<IAuthContext>({
 export interface IInitialAuthState {
   isAuthenticated: boolean;
   companyInfoAvailable: boolean;
+  // permittedRoutes: Array<any>;
 }
 
 const AuthProvider = ({ children }: any) => {
-  const router = useRouter();
   const [initialAuthState, setInitialAuthState] = useState<IInitialAuthState>({
     isAuthenticated: false,
     companyInfoAvailable: false,
+    // permittedRoutes: navRoutes,
   });
 
   useEffect(() => {
     const hasAccess = Cookie.get("token"); // the name used to store the user’s token in localstorage
     if (hasAccess) {
+      const { companyInfo }: any = jwt.decode(hasAccess);
       setInitialAuthState((prev: IInitialAuthState) => ({
         ...prev,
         isAuthenticated: true,
+        companyInfoAvailable: companyInfo,
       }));
     }
   }, []);

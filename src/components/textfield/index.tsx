@@ -7,6 +7,7 @@ interface ITextField {
   label: string;
   name: string;
   placeholder: string;
+  disabled?: boolean;
 }
 
 const TextField = ({
@@ -15,6 +16,7 @@ const TextField = ({
   label,
   name,
   placeholder,
+  disabled,
 }: ITextField) => {
   return (
     <>
@@ -27,9 +29,10 @@ const TextField = ({
             <input
               type={type}
               {...field}
+              disabled={disabled}
               autoComplete="false"
               placeholder={placeholder}
-              className={`block w-full rounded-md border-0 py-1.5 px-3 ${
+              className={`mt-2 block w-full rounded-md border-0 py-1.5 px-3 ${
                 meta.touched && meta.error && "ring-red-600"
               } text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-100 sm:text-sm sm:leading-6 `}
             />

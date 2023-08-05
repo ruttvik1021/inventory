@@ -5,9 +5,8 @@ import * as Yup from "yup";
 
 export interface IOrganizationInformation {
   organizationName: string;
-  industry: string;
-  firstName: string;
-  lastName: string;
+  retailType: string;
+  name: string;
   organizationLogo: string;
   mobileNumber: string;
   address: string;
@@ -15,9 +14,8 @@ export interface IOrganizationInformation {
 
 export const OrganizationInitialValues: IOrganizationInformation = {
   organizationName: "",
-  industry: "",
-  firstName: "",
-  lastName: "",
+  retailType: "",
+  name: "",
   organizationLogo: "",
   mobileNumber: "",
   address: "",
@@ -25,9 +23,8 @@ export const OrganizationInitialValues: IOrganizationInformation = {
 
 export const OrganizationYup = Yup.object().shape({
   organizationName: Yup.string().required("Required"),
-  industry: Yup.string().required("Required"),
-  firstName: Yup.string().max(15, "Max 15 characters").required("Required"),
-  lastName: Yup.string().max(15, "Max 15 characters").required("Required"),
+  retailType: Yup.string().required("Required"),
+  firstName: Yup.string().max(30, "Max 30 characters").required("Required"),
   organizationLogo: Yup.string().required("Required"),
   address: Yup.string().required("Required"),
 });

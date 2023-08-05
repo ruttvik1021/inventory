@@ -8,4 +8,7 @@ module.exports = {
   postcss: {
     plugins: [require("tailwindcss")],
   },
+  images: {
+    domains: ["logopond.com"],
+  },
 };

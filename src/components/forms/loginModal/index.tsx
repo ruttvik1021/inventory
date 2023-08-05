@@ -1,16 +1,14 @@
 "use client";
 
-import { Fragment, useContext, useEffect, useRef, useState } from "react";
-import { Dialog, Transition } from "@headlessui/react";
-import { FormikProvider, useFormik } from "formik";
-import TextField from "@/components/textfield";
-import * as Yup from "yup";
 import { forgotPassword, userLogin, userSignUp } from "@/_api/unauthAPIs";
 import { IMessage, formTypes, messageEnums } from "@/contants";
+import { FormikProvider, useFormik } from "formik";
+import { useEffect, useRef, useState } from "react";
+import * as Yup from "yup";
 import LoginForm from "./loginForm";
 // import CompanyInfoForm from "./companyInfoForm";
-import useAuth from "@/utils/useAuth";
-import { IInitialAuthState } from "@/utils/AuthContext";
+import Modal from "@/components/modalTemplate/Modal";
+import useAuth from "@/utils/context/useAuth";
 import { useRouter } from "next/navigation";
 
 interface IModal {
@@ -25,7 +23,6 @@ interface IInitialValues {
 }
 
 const LoginModal = ({ show, setShow, onBlur }: IModal) => {
-  const cancelButtonRef = useRef(null);
   const router = useRouter();
 
   const { initialAuthState, setInitialAuthState, loginUser } = useAuth();
@@ -39,13 +36,12 @@ const LoginModal = ({ show, setShow, onBlur }: IModal) => {
     const { status, body } = await userLogin(values);
     if (status > 199 && status < 299) {
       loginFormik.resetForm();
-      if (!body?.companyInfo) {
-        setInitialAuthState({
-          ...initialAuthState,
-          companyInfoAvailable: false,
-        });
-        router.push("/organization-info");
-      }
+      setInitialAuthState({
+        ...initialAuthState,
+        isAuthenticated: true,
+        companyInfoAvailable: body?.companyInfo,
+      });
+      setShow(false);
       loginUser(body?.token || null);
     } else {
       setMessage({
@@ -79,13 +75,17 @@ const LoginModal = ({ show, setShow, onBlur }: IModal) => {
       loginFormik.resetForm();
       setFormType(formTypes.LOGIN);
     } else {
-      console.log("error");
+      setMessage({
+        style: messageEnums.ERROR,
+        message: body.message,
+      });
     }
   };
 
   useEffect(() => {
     if (show === false) {
       loginFormik.resetForm();
+      setFormType(formTypes.LOGIN);
     }
   }, [show]);
 
@@ -146,62 +146,21 @@ const LoginModal = ({ show, setShow, onBlur }: IModal) => {
   });
 
   return (
-    <Transition.Root show={show} as={Fragment}>
-      <Dialog
-        as={"div"}
-        className="fixed inset-0 z-10 overflow-y-auto"
-        initialFocus={cancelButtonRef}
-        onClose={onBlur ? () => setShow(false) : () => setShow(true)} // This ensures the modal is closed only when this function is called
-      >
-        <div className="flex min-h-screen items-center justify-center">
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-100"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-100"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-          </Transition.Child>
-
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-100"
-            enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-            enterTo="opacity-100 translate-y-0 sm:scale-100"
-            leave="ease-in duration-100"
-            leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-            leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-          >
-            <div className="p-10 bg-white rounded-3xl sm:mx-auto sm:w-full sm:max-w-sm">
-              <div className="flex justify-end">
-                <span
-                  className="font-semibold text-lg  cursor-pointer"
-                  onClick={() => setShow(false)}
-                >
-                  X
-                </span>
-              </div>
-              <div>
-                <p className="font-semibold text-lg text-indigo-600 hover:text-indigo-500">
-                  {getTitle()}
-                </p>
-              </div>
-              <FormikProvider value={loginFormik}>
-                <LoginForm
-                  formik={loginFormik}
-                  formType={formType}
-                  setFormType={setFormType}
-                  message={message}
-                />
-              </FormikProvider>
-            </div>
-          </Transition.Child>
-        </div>
-      </Dialog>
-    </Transition.Root>
+    <Modal show={show} setShow={setShow} onBlur={false}>
+      <div>
+        <p className="font-semibold text-lg text-indigo-600 hover:text-indigo-500">
+          {getTitle()}
+        </p>
+      </div>
+      <FormikProvider value={loginFormik}>
+        <LoginForm
+          formik={loginFormik}
+          formType={formType}
+          setFormType={setFormType}
+          message={message}
+        />
+      </FormikProvider>
+    </Modal>
   );
 };
 

@@ -9,14 +9,10 @@ import LoginModal from "../forms/loginModal";
 const SignInButton = () => {
   const [modalShow, setModalShow] = useState<boolean>(false);
   const { t } = useTranslation();
-  // const router = useRouter();
-  const navigateToLigin = () => {
-    setModalShow(true);
-  };
   return (
     <>
       <div>
-        <PrimaryButton text={"Sign In"} onClick={navigateToLigin} />
+        <PrimaryButton text={"Sign In"} onClick={() => setModalShow(true)} />
       </div>
       <LoginModal show={modalShow} setShow={setModalShow} onBlur={true} />
     </>
