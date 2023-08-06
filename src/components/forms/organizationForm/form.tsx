@@ -2,11 +2,11 @@
 import TextField from "@/components/textfield";
 import ImagePicker from "./imagePicker";
 import MobileInput from "@/components/mobileNumber/Index";
+import AutoComplete from "@/components/autocomplete";
 
 const OrgForm = ({ formik }: any) => {
   return (
     <>
-      {/* <form> */}
       <div className="space-y-12">
         <div className="border-b border-gray-900/10 pb-12">
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
@@ -65,6 +65,19 @@ const OrgForm = ({ formik }: any) => {
                 placeholder={"Retail Type (Hardware, Spares, etc)"}
               />
             </div>
+
+            <div className="sm:col-span-2 sm:col-start-1">
+              {/* <TextField
+                type={"text"}
+                label={"Retail Type"}
+                name={"retailType"}
+                placeholder={"Retail Type (Hardware, Spares, etc)"}
+              /> */}
+              <AutoComplete
+                options={JSON.parse(localStorage.getItem("countryList") || "")}
+                name={"countrycode"}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -87,7 +100,6 @@ const OrgForm = ({ formik }: any) => {
           Save
         </button>
       </div>
-      {/* </form> */}
     </>
   );
 };

@@ -26,13 +26,6 @@ const OrgInfo = () => {
     },
   });
 
-  const getCountryList = async () => {
-    const { status, body } = await getCountryListApi();
-    if (status > 199 && status < 299) {
-      console.log(body.countryList);
-    }
-  };
-
   const updateOrganizatioInfo = async (values: any) => {
     try {
       const { status, body } = await updateOrgInfoAPI(values);
@@ -68,9 +61,9 @@ const OrgInfo = () => {
     }
   };
 
-  // useEffect(() => {
-  //   getCurrentUser();
-  // }, []);
+  useEffect(() => {
+    getCurrentUser();
+  }, []);
   return (
     <div>
       <form className="space-y-6" onSubmit={organizationFormik.handleSubmit}>

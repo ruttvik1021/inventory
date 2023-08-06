@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import jwt from "jsonwebtoken";
 import { navRoutes } from "@/contants/pageroutes";
 import { getCurrentUserApi } from "@/_api/auth";
+import { getCountryListApi } from "@/_api/unauthAPIs";
 
 interface IAuthContext {
   initialAuthState: IInitialAuthState;
@@ -40,6 +41,19 @@ const AuthProvider = ({ children }: any) => {
     // permittedRoutes: navRoutes,
   });
 
+  const getCountryList = async () => {
+    const { status, body } = await getCountryListApi();
+    if (status > 199 && status < 299) {
+      const modifiedArray = body?.countries?.countries.map((item: any) => {
+        return {
+          label: item.name,
+          value: item.countryCallingCode,
+        };
+      });
+      localStorage.setItem("countryList", JSON.stringify(modifiedArray));
+    }
+  };
+
   const getUserDetails = async () => {
     const { status, body } = await getCurrentUserApi();
     if (status === 200) {
@@ -57,6 +71,7 @@ const AuthProvider = ({ children }: any) => {
     if (hasAccess) {
       getUserDetails();
     }
+    getCountryList();
   }, []);
 
   const loginUser = (token: any) => {
