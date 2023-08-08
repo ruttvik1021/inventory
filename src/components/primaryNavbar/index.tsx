@@ -87,6 +87,7 @@ const PrimaryNavbar = () => {
           </div>
         </div>
       </nav>
+
       <LoginModal show={modalShow} setShow={setModalShow} onBlur={true} />
     </>
   );

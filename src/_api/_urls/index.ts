@@ -11,6 +11,7 @@ const authUrls = {
   completeProfile: "/api/auth/completeprofile",
   forgotPassword: "/api/auth/forgotpassword",
   countryList: "/api/auth/countryList",
+  indutryList: "/api/auth/industries",
 };
 
 export { baseUrls, authUrls };

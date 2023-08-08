@@ -26,13 +26,6 @@ const settingBaseUrl = (module: IModules) => {
   // Request interceptor for authorized APIs
   authorizedAxiosInstance.interceptors.request.use(
     function (config) {
-      if (
-        !config?.headers.disableCommonLoader &&
-        !config.headers.disableCommonLoader
-      ) {
-        document.body.classList.add("loading-indicator");
-      }
-
       const token = Cookies.get("token");
       if (token !== "undefined" && token !== null && token !== undefined) {
         config.headers.Authorization = `Bearer ${token}`;
@@ -52,7 +45,6 @@ const settingBaseUrl = (module: IModules) => {
       return response;
     },
     (error) => {
-      document.body.classList.remove("loading-indicator");
       if (!error.response || error.response.status === 401) {
         handleLogout();
       } else {

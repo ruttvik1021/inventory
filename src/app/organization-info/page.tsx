@@ -1,5 +1,9 @@
 "use client";
-import { getCurrentUserApi, updateOrgInfoAPI } from "@/_api/auth";
+import {
+  getAllIndustriesListAPI,
+  getCurrentUserApi,
+  updateOrgInfoAPI,
+} from "@/_api/auth";
 import { getCountryListApi } from "@/_api/unauthAPIs";
 import {
   IOrganizationInformation,
@@ -12,11 +16,16 @@ import { AuthContext } from "@/utils/context/AuthContext";
 import useAuth from "@/utils/context/useAuth";
 import { FormikProvider, useFormik } from "formik";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
+interface IIndustryList {
+  industryName: string;
+  id: string;
+}
 const OrgInfo = () => {
   const { initialAuthState, setInitialAuthState } = useAuth();
+  const [industryList, setIndustryList] = useState<Array<IIndustryList>>([]);
   const router = useRouter();
   const organizationFormik = useFormik<IOrganizationInformation>({
     initialValues: OrganizationInitialValues,
@@ -45,6 +54,12 @@ const OrgInfo = () => {
     }
   };
 
+  const getAllIndustries = async () => {
+    const { status, body } = await getAllIndustriesListAPI();
+    if (status === 200) {
+      setIndustryList(body.industries);
+    }
+  };
   const getCurrentUser = async () => {
     const { status, body } = await getCurrentUserApi();
     if (status === 200) {
@@ -63,13 +78,14 @@ const OrgInfo = () => {
 
   useEffect(() => {
     getCurrentUser();
+    getAllIndustries();
   }, []);
   return (
     <div>
       <form className="space-y-6" onSubmit={organizationFormik.handleSubmit}>
         <FormikProvider value={organizationFormik}>
           <div className="px-5">
-            <OrgForm formik={organizationFormik} />
+            <OrgForm formik={organizationFormik} industryList={industryList} />
           </div>
         </FormikProvider>
       </form>

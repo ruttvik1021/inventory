@@ -45,7 +45,7 @@ const LoginModal = ({ show, setShow, onBlur }: IModal) => {
       toast.success("Login Successful");
       loginUser(body?.token || null);
     } else {
-      toast.error(body.message);
+      toast.error(body?.message ? body?.message : "Something went wrong");
     }
   };
 
@@ -56,7 +56,7 @@ const LoginModal = ({ show, setShow, onBlur }: IModal) => {
       setFormType(formTypes.LOGIN);
       toast.success(body.message);
     } else {
-      toast.error(body.message);
+      toast.error(body?.message ? body?.message : "Something went wrong");
     }
   };
 
@@ -68,7 +68,7 @@ const LoginModal = ({ show, setShow, onBlur }: IModal) => {
       setFormType(formTypes.LOGIN);
       toast.success(body.message);
     } else {
-      toast.error(body.message);
+      toast.error(body?.message ? body?.message : "Something went wrong");
     }
   };
 

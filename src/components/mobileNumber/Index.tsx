@@ -2,7 +2,7 @@ import React from "react";
 import AutoComplete from "../autocomplete";
 
 const MobileInput = () => {
-  return <AutoComplete />;
+  return <></>;
 };
 
 export default MobileInput;

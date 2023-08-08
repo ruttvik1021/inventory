@@ -1,10 +1,10 @@
 "use client";
+import SelectField from "@/components/selectField";
 import TextField from "@/components/textfield";
 import ImagePicker from "./imagePicker";
-import MobileInput from "@/components/mobileNumber/Index";
-import AutoComplete from "@/components/autocomplete";
+import { organizationInfoKeys } from "./constants";
 
-const OrgForm = ({ formik }: any) => {
+const OrgForm = ({ formik, industryList }: any) => {
   return (
     <>
       <div className="space-y-12">
@@ -17,7 +17,7 @@ const OrgForm = ({ formik }: any) => {
               <TextField
                 type={"text"}
                 label={"Organization Name"}
-                name={"organizationName"}
+                name={organizationInfoKeys.organizationName}
                 placeholder={"Organization Name"}
               />
             </div>
@@ -25,7 +25,7 @@ const OrgForm = ({ formik }: any) => {
               <TextField
                 type={"text"}
                 label={"Name"}
-                name={"name"}
+                name={organizationInfoKeys.name}
                 placeholder={"Name"}
               />
             </div>
@@ -34,7 +34,7 @@ const OrgForm = ({ formik }: any) => {
               <TextField
                 type={"text"}
                 label={"Email address"}
-                name={"email"}
+                name={organizationInfoKeys.email}
                 placeholder={"Email address"}
                 disabled={true}
               />
@@ -44,7 +44,7 @@ const OrgForm = ({ formik }: any) => {
               <TextField
                 type={"text"}
                 label={"Address"}
-                name={"address"}
+                name={organizationInfoKeys.address}
                 placeholder={"Address"}
               />
             </div>
@@ -52,30 +52,29 @@ const OrgForm = ({ formik }: any) => {
               <TextField
                 type={"number"}
                 label={"Mobile Number"}
-                name={"mobileNumber"}
+                name={organizationInfoKeys.mobileNumber}
                 placeholder={"Mobile Number"}
               />
             </div>
 
             <div className="sm:col-span-2 sm:col-start-1">
-              <TextField
-                type={"text"}
-                label={"Retail Type"}
-                name={"retailType"}
-                placeholder={"Retail Type (Hardware, Spares, etc)"}
+              <SelectField
+                label={"Industry"}
+                options={industryList}
+                labelKey={"industryName"}
+                valueKey={"id"}
+                name={organizationInfoKeys.industryId}
+                isClearable
+                onChange={(e) => formik.setFieldValue("industryId", e)}
               />
             </div>
 
-            <div className="sm:col-span-2 sm:col-start-1">
-              {/* <TextField
+            <div className="sm:col-span-4">
+              <TextField
                 type={"text"}
-                label={"Retail Type"}
-                name={"retailType"}
-                placeholder={"Retail Type (Hardware, Spares, etc)"}
-              /> */}
-              <AutoComplete
-                options={JSON.parse(localStorage.getItem("countryList") || "")}
-                name={"countrycode"}
+                label={"About Organization"}
+                name={organizationInfoKeys.aboutus}
+                placeholder={"About Organization"}
               />
             </div>
           </div>
