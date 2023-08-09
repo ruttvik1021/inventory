@@ -30,7 +30,7 @@ const PrimaryNavbar = () => {
 
   return (
     <>
-      <nav className="flex justify-between items-center p-3 px-5 bg-gray-800 text-white">
+      <nav className="flex justify-between items-center p-3 px-5  text-gray-800 border-b-2">
         <div className="flex justify-start gap-10">
           <Link href={"/"}>
             <Image
@@ -42,7 +42,7 @@ const PrimaryNavbar = () => {
           </Link>
         </div>
         <div className="flex gap-5">
-          <ul className="xl:flex lg:flex md:flex hidden text-sm gap-7 justify-center items-center">
+          <ul className="xl:flex lg:flex md:flex hidden text-lg font-medium gap-7 justify-center items-center">
             {initialAuthState.isAuthenticated &&
               initialAuthState.companyInfoAvailable &&
               navRoutes.map(({ label, href }: any, index: number) => (

@@ -1,5 +1,5 @@
 "use client";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import React from "react";
 
 interface INavLinks {
@@ -10,9 +10,14 @@ interface INavLinks {
 
 const NavLinks = ({ label, href, index }: INavLinks) => {
   const router = useRouter();
+  const pathName = usePathname();
   return (
     <p
-      className="cursor-pointer hover:text-indigo-400"
+      className={`cursor-pointer hover:text-blue-700 ${
+        pathName.includes(href)
+          ? "text-indigo-700 border-b-2 border-indigo-700 font-bold"
+          : ""
+      }`}
       key={`${label}-${href}${index && `-${index}`}`}
       onClick={() => router.push(href)}
       tabIndex={0}

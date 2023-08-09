@@ -1,5 +1,6 @@
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
+import { usePathname } from "next/navigation";
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
@@ -16,6 +17,7 @@ interface IProps {
 }
 
 const NavDropDown = ({ options, orgLogo }: IProps) => {
+  const pathName = usePathname();
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>

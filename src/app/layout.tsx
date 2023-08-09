@@ -21,7 +21,7 @@ export default function RootLayout({
         <AuthProvider>
           <ProtectedRoutes>
             <PrimaryNavbar />
-            <main className="p-5">{children}</main>
+            <main>{children}</main>
             <Toaster />
           </ProtectedRoutes>
         </AuthProvider>

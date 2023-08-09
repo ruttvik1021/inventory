@@ -39,7 +39,6 @@ const SelectField = ({
         {({ field, meta }: any) => (
           <div>
             <Select
-              styles={{ border: "none" }}
               {...field}
               getOptionLabel={(option: any) => option[labelKey]}
               getOptionValue={(option: any) => option[valueKey]}

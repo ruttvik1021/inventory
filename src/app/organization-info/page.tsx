@@ -29,7 +29,7 @@ const OrgInfo = () => {
   const router = useRouter();
   const organizationFormik = useFormik<IOrganizationInformation>({
     initialValues: OrganizationInitialValues,
-    // validationSchema: OrganizationYup,
+    validationSchema: OrganizationYup,
     onSubmit: (values: any) => {
       updateOrganizatioInfo(values);
     },

@@ -50,7 +50,7 @@ const OrgForm = ({ formik, industryList }: any) => {
             </div>
             <div className="sm:col-span-3">
               <TextField
-                type={"number"}
+                type={"text"}
                 label={"Mobile Number"}
                 name={organizationInfoKeys.mobileNumber}
                 placeholder={"Mobile Number"}

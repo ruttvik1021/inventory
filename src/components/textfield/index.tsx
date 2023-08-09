@@ -2,7 +2,7 @@ import React from "react";
 import { Formik, Field, ErrorMessage } from "formik";
 
 interface ITextField {
-  type: "text" | "number" | "password";
+  type: "text" | "password";
   required?: boolean;
   label: string;
   name: string;
