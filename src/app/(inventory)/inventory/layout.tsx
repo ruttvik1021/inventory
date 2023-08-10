@@ -1,5 +1,3 @@
-import InventoryNavbar from "@/components/inventoryNavbar";
-
 export default function InventoryLayout({
   children,
 }: {
@@ -7,8 +5,6 @@ export default function InventoryLayout({
 }) {
   return (
     <>
-      <InventoryNavbar />
-      {/* <main>{children}</main> */}
       <main>{children}</main>
     </>
   );

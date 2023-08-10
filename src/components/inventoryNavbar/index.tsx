@@ -6,20 +6,22 @@ import { useRouter } from "next/navigation";
 const InventoryNavbar = () => {
   const router = useRouter();
   const plans = [
-    { label: "Category", href: "category" },
-    { label: "Products", href: "products" },
-    { label: "Locations", href: "locations" },
+    { label: "Category" },
+    { label: "Products" },
+    { label: "Locations" },
   ];
-  const [plan, setPlan] = useState(plans[0]);
+  const [view, setView] = useState(
+    plans.find((item) => item.label === "Products")
+  );
   return (
-    <nav className="flex justify-center md:justify-between lg:justify-between xl:justify-between items-center text-black px-7 mt-3">
+    <nav className="sm:hidden flex md:flex justify-center md:justify-between lg:justify-between xl:justify-between items-center text-black px-7 mt-3">
       <p className="hidden md:block lg:block xl:block font-bold text-2xl text-indigo-700">
         Inventory
       </p>
       <ul>
         <RadioGroup
-          value={plan}
-          onChange={setPlan}
+          value={view}
+          onChange={setView}
           name="plan"
           className="flex text-md gap-7"
         >
@@ -27,11 +29,10 @@ const InventoryNavbar = () => {
             <RadioGroup.Option key={item.label} value={item}>
               <p
                 className={`cursor-pointer hover:text-indigo-700 ${
-                  item.href === plan.href
+                  item.label === (view && view.label)
                     ? "text-indigo-700 border-b-2 border-indigo-700 font-bold "
                     : ""
                 }`}
-                onClick={() => router.push(`/inventory/${item.href}`)}
               >
                 {item.label}
               </p>

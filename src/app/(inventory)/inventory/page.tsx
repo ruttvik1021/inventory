@@ -1,4 +1,5 @@
 // "use client";
+import InventoryNavbar from "@/components/inventoryNavbar";
 import React from "react";
 // import { useSession, getSession } from "next-auth/react";
 
@@ -25,10 +26,11 @@ const Inventory = async () => {
   console.log(data1);
   return (
     <>
-      qwertyuiop
-      {/* {data?.map((item: any, index: number) => (
-        <div key={`${item.product}`}>{item.products}</div>
-      ))} */}
+      <InventoryNavbar />
+      <div className="columns-3xs ...">
+        <img className="w-full aspect-video ..." src="..." />
+        <img className="w-full aspect-square ..." src="..." />
+      </div>
     </>
   );
 };
