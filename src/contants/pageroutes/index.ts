@@ -15,14 +15,25 @@ export const dropDownOptions = [
 export const navRoutes = [
   {
     label: "Inventory",
-    href: "/inventory",
+    href: "/inventory/insights",
   },
   {
     label: "Finance",
-    href: "/finance",
+    href: "/finance/insights",
   },
   {
     label: "Credit",
-    href: "/credit",
+    href: "/credit/insights",
+  },
+];
+
+export const inventorySubRoutes = [
+  {
+    label: "Insights",
+    href: "/inventory/insights",
+  },
+  {
+    label: "Products",
+    href: "/inventory/products",
   },
 ];

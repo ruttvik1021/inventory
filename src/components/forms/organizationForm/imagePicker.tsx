@@ -9,6 +9,7 @@ interface IImagePicker {
   required?: boolean;
   name: string;
   formik: any;
+  disabled?: boolean;
 }
 
 export const imageFileTypes = [
@@ -20,7 +21,13 @@ export const imageFileTypes = [
   "image/JPEG",
 ];
 
-const ImagePicker = ({ label, required, name, formik }: IImagePicker) => {
+const ImagePicker = ({
+  label,
+  required,
+  name,
+  formik,
+  disabled,
+}: IImagePicker) => {
   const convertImagetoURI = (e: any) => {
     const file = e.target?.files[0];
     if (imageFileTypes.find((item: any) => item === e.target.files[0]?.type)) {
@@ -63,12 +70,14 @@ const ImagePicker = ({ label, required, name, formik }: IImagePicker) => {
                     width={"100px"}
                     className="border-2 p-1 rounded-full border-red-500"
                   />{" "}
-                  <div>
-                    <CloseIcon
-                      onClick={() => formik.setFieldValue(name, "")}
-                      className="cursor-pointer w-8"
-                    />
-                  </div>
+                  {!disabled && (
+                    <div>
+                      <CloseIcon
+                        onClick={() => formik.setFieldValue(name, "")}
+                        className="cursor-pointer w-8"
+                      />
+                    </div>
+                  )}
                 </div>
               </>
             )}

@@ -1,6 +1,4 @@
-// "use client";
-import InventoryNavbar from "@/components/inventoryNavbar";
-import React from "react";
+import Products from "@/components/inventory/products";
 // import { useSession, getSession } from "next-auth/react";
 
 const getInventoryDashboardData = async () => {
@@ -24,15 +22,7 @@ const Inventory = async () => {
   // });
   const data1 = await getInventoryDashboardData();
   console.log(data1);
-  return (
-    <>
-      <InventoryNavbar />
-      <div className="columns-3xs ...">
-        <img className="w-full aspect-video ..." src="..." />
-        <img className="w-full aspect-square ..." src="..." />
-      </div>
-    </>
-  );
+  return <Products />;
 };
 
 export default Inventory;

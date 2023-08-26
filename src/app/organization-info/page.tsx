@@ -4,15 +4,12 @@ import {
   getCurrentUserApi,
   updateOrgInfoAPI,
 } from "@/_api/auth";
-import { getCountryListApi } from "@/_api/unauthAPIs";
 import {
   IOrganizationInformation,
   OrganizationInitialValues,
   OrganizationYup,
 } from "@/components/forms/organizationForm/constants";
 import OrgForm from "@/components/forms/organizationForm/form";
-import ImagePicker from "@/components/forms/organizationForm/imagePicker";
-import { AuthContext } from "@/utils/context/AuthContext";
 import useAuth from "@/utils/context/useAuth";
 import { FormikProvider, useFormik } from "formik";
 import { useRouter } from "next/navigation";

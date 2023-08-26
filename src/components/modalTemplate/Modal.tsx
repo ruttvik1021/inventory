@@ -4,12 +4,6 @@ import { CloseIcon } from "@/utils/images/icons/closeIcon";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useRef } from "react";
 
-interface IModal {
-  show: boolean;
-  onBlur?: boolean;
-  setShow: (state: boolean) => void;
-}
-
 const Modal = ({
   children,
   show,

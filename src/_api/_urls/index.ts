@@ -14,4 +14,8 @@ const authUrls = {
   indutryList: "/api/auth/industries",
 };
 
-export { baseUrls, authUrls };
+const inventoryUrls = {
+  createCategory: "/api/create/category",
+};
+
+export { baseUrls, authUrls, inventoryUrls };

@@ -14,7 +14,7 @@ const NavLinks = ({ label, href, index }: INavLinks) => {
   return (
     <p
       className={`cursor-pointer hover:text-blue-700 ${
-        pathName.includes(href)
+        pathName.includes(label.toLowerCase())
           ? "text-indigo-700 border-b-2 border-indigo-700 font-bold"
           : ""
       }`}
