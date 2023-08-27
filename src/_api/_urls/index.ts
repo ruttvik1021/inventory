@@ -16,6 +16,7 @@ const authUrls = {
 
 const inventoryUrls = {
   createCategory: "/api/create/category",
+  getAllCategories: "/api/getAll/category",
 };
 
 export { baseUrls, authUrls, inventoryUrls };

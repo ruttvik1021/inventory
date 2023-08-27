@@ -9,7 +9,7 @@ const getInventoryDashboardData = async () => {
       products: "Breaks",
     },
   ];
-  if (status > 199 || status < 299) {
+  if (status > 199 && status < 299) {
     return body;
   }
 };

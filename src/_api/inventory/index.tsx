@@ -22,3 +22,17 @@ export const createCategoryApi = async (payload: { categoryName: string }) => {
     return { status: 500, body: "Error" };
   }
 };
+
+export const getAllCategoriesApi = async () => {
+  try {
+    return await AuthorizedAxiosInstance.get(inventoryUrls.getAllCategories)
+      .then((response: any) => {
+        return { status: response.status, body: response.data };
+      })
+      .catch((err: any) => {
+        return { status: err.response.status, body: err.response.data };
+      });
+  } catch (err) {
+    return { status: 500, body: "Error" };
+  }
+};

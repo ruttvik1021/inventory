@@ -8,22 +8,13 @@ export const ProtectedRoutes = ({ children }: any) => {
   const router = useRouter();
   const { initialAuthState } = useAuth();
   if (
-    !initialAuthState.isAuthenticated ||
+    initialAuthState.isAuthenticated &&
+    Cookies.get("token") &&
     !initialAuthState.companyInfoAvailable
   ) {
-    // if (
-    //   !Cookies.get("token") &&
-    //   pageRoutes.find((item: any) => item.href === pathname || "/home")
-    // ) {
-    //   router.push("/inventory");
-    // }
-    if (
-      initialAuthState.isAuthenticated &&
-      Cookies.get("token") &&
-      !initialAuthState.companyInfoAvailable
-    ) {
-      router.push("/organization-info");
-    }
+    router.push("/organization-info");
+  } else if (!Cookies.get("token") || !initialAuthState.isAuthenticated) {
+    router.push("/");
   }
   return children;
 };

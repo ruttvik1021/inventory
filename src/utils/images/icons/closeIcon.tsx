@@ -1,4 +1,4 @@
-export const CloseIcon = ({ onClick, className }: any) => {
+export const CloseIcon = ({ onClick, className, tooltip }: any) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

@@ -46,7 +46,7 @@ const settingBaseUrl = (module: IModules) => {
     },
     (error) => {
       if (!error.response || error.response.status === 401) {
-        handleLogout();
+        // handleLogout();
       } else {
         return Promise.reject(error);
       }

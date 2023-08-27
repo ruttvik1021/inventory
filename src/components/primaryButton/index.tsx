@@ -1,8 +1,8 @@
-import React, { MouseEvent } from "react";
+import React from "react";
 
 interface IButton {
   text: string;
-  onClick: () => void;
+  onClick: any;
 }
 
 const PrimaryButton = ({ text, onClick }: IButton) => {

@@ -34,6 +34,7 @@ export interface IInitialAuthState {
 }
 
 const AuthProvider = ({ children }: any) => {
+  const router = useRouter();
   const [initialAuthState, setInitialAuthState] = useState<IInitialAuthState>({
     isAuthenticated: false,
     companyInfoAvailable: false,
@@ -88,6 +89,7 @@ const AuthProvider = ({ children }: any) => {
 
   const logoutUser = () => {
     Cookie.remove("token");
+    router.push("/");
     setInitialAuthState((prev: IInitialAuthState) => ({
       ...prev,
       isAuthenticated: false,
