@@ -1,5 +1,11 @@
 "use client";
-import { createCategoryApi, getAllCategoriesApi } from "@/_api/inventory";
+import {
+  createCategoryApi,
+  deleteCategoryByIdApi,
+  getAllCategoriesApi,
+  getCategoryByIdApi,
+  updateCategoryByIdApi,
+} from "@/_api/inventory";
 import DeleteButton from "@/components/deleteButton";
 import PrimaryButton from "@/components/primaryButton";
 import TextField from "@/components/textfield";
@@ -14,52 +20,6 @@ import CategoryCard from "../cards/categorycard";
 import ProductCard from "../cards/productcard";
 import * as Yup from "yup";
 import { toast } from "react-hot-toast";
-
-const sortOptions = [
-  { name: "Most Popular", href: "#", current: true },
-  { name: "Best Rating", href: "#", current: false },
-  { name: "Newest", href: "#", current: false },
-  { name: "Price: Low to High", href: "#", current: false },
-  { name: "Price: High to Low", href: "#", current: false },
-];
-
-const filters = [
-  {
-    id: "color",
-    name: "Color",
-    options: [
-      { value: "white", label: "White", checked: false },
-      { value: "beige", label: "Beige", checked: false },
-      { value: "blue", label: "Blue", checked: true },
-      { value: "brown", label: "Brown", checked: false },
-      { value: "green", label: "Green", checked: false },
-      { value: "purple", label: "Purple", checked: false },
-    ],
-  },
-  {
-    id: "category",
-    name: "Category",
-    options: [
-      { value: "new-arrivals", label: "New Arrivals", checked: false },
-      { value: "sale", label: "Sale", checked: false },
-      { value: "travel", label: "Travel", checked: true },
-      { value: "organization", label: "Organization", checked: false },
-      { value: "accessories", label: "Accessories", checked: false },
-    ],
-  },
-  {
-    id: "size",
-    name: "Size",
-    options: [
-      { value: "2l", label: "2L", checked: false },
-      { value: "6l", label: "6L", checked: false },
-      { value: "12l", label: "12L", checked: false },
-      { value: "18l", label: "18L", checked: false },
-      { value: "20l", label: "20L", checked: false },
-      { value: "40l", label: "40L", checked: true },
-    ],
-  },
-];
 
 const products = [
   {
@@ -133,32 +93,80 @@ const products = [
 
 export default function Products() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  const [newCategoryModal, setNewCategoryModal] = useState(false);
-  const [categoriesList, setCategoriesList] = useState<Array<any>>([]);
 
-  const addNewCategory = () => {
-    setNewCategoryModal(!newCategoryModal);
-  };
+  const [initialCategory, setInitialCategory] = useState({
+    editMode: false,
+    newCategory: false,
+    categorySelected: "",
+    categoryList: [
+      {
+        categoryName: "",
+        id: null,
+        productsCount: 0,
+      },
+    ],
+  });
 
   const getAllCategory = async () => {
     const { status, body } = await getAllCategoriesApi();
     if (status > 199 && status < 299) {
-      setCategoriesList(body.categories);
+      setInitialCategory((prev) => ({
+        ...prev,
+        categoryList: body.categories,
+      }));
     }
   };
-
+  const getCategoryById = async (id: string) => {
+    const { status, body } = await getCategoryByIdApi(id);
+    if (status > 199 && status < 299) {
+      setInitialCategory((prev) => ({
+        ...prev,
+        editMode: true,
+        categorySelected: id,
+        newCategory: true,
+      }));
+      categoryFormik.setValues(body.category);
+    }
+  };
+  const deleteCategoryById = async (id: string) => {
+    const { status, body } = await deleteCategoryByIdApi(id);
+    if (status > 199 && status < 299) {
+      setInitialCategory((prev) => ({
+        ...prev,
+        editMode: false,
+        newCategory: false,
+      }));
+      toast.success(body.message);
+      getAllCategory();
+    }
+  };
+  const updateCategoryById = async (values: any) => {
+    const payload = { ...values, id: initialCategory.categorySelected };
+    const { status, body } = await updateCategoryByIdApi(payload);
+    if (status > 199 && status < 299) {
+      setInitialCategory((prev) => ({
+        ...prev,
+        editMode: false,
+        newCategory: false,
+      }));
+      toast.success(body.message);
+      getAllCategory();
+    }
+  };
   const createCat = async (payload: any) => {
     const { status, body } = await createCategoryApi(payload);
     if (status > 199 && status < 299) {
       toast.success(body.message);
-      setNewCategoryModal(!newCategoryModal);
+      setInitialCategory((prev) => ({
+        ...prev,
+        newCategory: !prev.newCategory,
+      }));
       getAllCategory();
       categoryFormik.resetForm();
     } else {
       toast.error(body.message);
     }
   };
-
   const categoryFormik = useFormik({
     initialValues: {
       categoryName: "",
@@ -166,16 +174,33 @@ export default function Products() {
     validationSchema: Yup.object({
       categoryName: Yup.string().required("Required"),
     }),
-    onSubmit: (values) => createCat(values),
+    onSubmit: (values) =>
+      initialCategory.editMode ? updateCategoryById(values) : createCat(values),
   });
 
   useEffect(() => {
     getAllCategory();
   }, []);
 
+  const resetCategoryModes = () => {
+    setInitialCategory((prev: any) => ({
+      ...prev,
+      editMode: false,
+      newCategory: false,
+      categorySelected: "",
+    }));
+    categoryFormik.resetForm();
+  };
+
+  useEffect(() => {
+    if (initialCategory.newCategory === false) {
+      resetCategoryModes();
+    }
+  }, [initialCategory.newCategory]);
+
   const createCategory = () => {
     return (
-      newCategoryModal && (
+      initialCategory.newCategory && (
         <div>
           <div>
             <TextField
@@ -186,13 +211,16 @@ export default function Products() {
             />
           </div>
           <div className="flex justify-between mt-2 p-1 gap-2">
-            {/* {editMode ? (
-              <> */}
-            <DeleteButton text={"Delete"} onClick={undefined} />
-            {/* </>
-            ) : ( */}
+            {initialCategory.editMode && (
+              <DeleteButton
+                text={"Delete"}
+                onClick={() =>
+                  deleteCategoryById(initialCategory.categorySelected)
+                }
+              />
+            )}
             <PrimaryButton
-              text={"Create"}
+              text={initialCategory.editMode ? "Update" : "Create"}
               onClick={(e: any) => {
                 e.preventDefault();
                 categoryFormik.handleSubmit();
@@ -264,13 +292,14 @@ export default function Products() {
                             <p className="text-2xl mb-3">Categories</p>
                           </div>
                           {createCategory()}
-                          {categoriesList.length &&
-                            categoriesList?.map((item, index) => (
+                          {initialCategory.categoryList?.length &&
+                            initialCategory.categoryList?.map((item, index) => (
                               <li className="my-3">
                                 <CategoryCard
-                                  key={`${item.category}-${index}`}
+                                  key={`${item.categoryName}-${index}`}
                                   category={item.categoryName}
                                   productCount={item.productsCount}
+                                  onClick={() => getCategoryById(item.id || "")}
                                 />
                               </li>
                             ))}
@@ -283,7 +312,7 @@ export default function Products() {
             </Transition.Root>
 
             <main>
-              <div className="flex items-baseline justify-end border-b border-gray-200 pb-6 pt-2">
+              <div className="flex items-baseline justify-end">
                 <div className="flex items-center">
                   {/* <Menu as="div" className="relative inline-block text-left">
                     <div>
@@ -355,20 +384,27 @@ export default function Products() {
                   <form className="hidden lg:block">
                     <div className="flex justify-between items-center">
                       <p className="text-2xl mb-3">Categories</p>
-                      {newCategoryModal ? (
+                      {initialCategory.newCategory ? (
                         <CloseIcon
                           className="cursor-pointer"
                           onClick={(e: any) => {
                             e.preventDefault();
-                            setNewCategoryModal(false);
+                            setInitialCategory((prev) => ({
+                              ...prev,
+                              newCategory: false,
+                            }));
                           }}
                           tooltip={true}
                         />
                       ) : (
                         <AddIcon
+                          className="cursor-pointer"
                           onClick={(e: any) => {
                             e.preventDefault();
-                            setNewCategoryModal(true);
+                            setInitialCategory((prev) => ({
+                              ...prev,
+                              newCategory: true,
+                            }));
                           }}
                           tooltip={true}
                         />
@@ -379,13 +415,17 @@ export default function Products() {
                       className="space-y-4 border-b pb-6 text-sm font-medium text-gray-900"
                     >
                       {createCategory()}
-                      {categoriesList?.length &&
-                        categoriesList?.map((item: any) => (
-                          <CategoryCard
-                            category={item?.categoryName}
-                            productCount={item?.productsCount}
-                          />
-                        ))}
+                      {initialCategory.categoryList?.length &&
+                        initialCategory.categoryList?.map(
+                          (item: any, index: number) => (
+                            <CategoryCard
+                              key={`${item.category}-${index}`}
+                              category={item?.categoryName}
+                              productCount={item?.productsCount}
+                              onClick={() => getCategoryById(item.id)}
+                            />
+                          )
+                        )}
                     </ul>
                   </form>
 
@@ -412,12 +452,6 @@ export default function Products() {
           </div>
         </div>
       </FormikProvider>
-      {/* <CategoryModal
-        show={newCategoryModal}
-        setShow={setNewCategoryModal}
-        onBlur={true}
-        formik={categoryFormik}
-      /> */}
     </>
   );
 }

@@ -11,7 +11,7 @@ const InventoryNavbar = () => {
     plans.find((item) => item.label === "Products")
   );
   return (
-    <nav className="sm:hidden flex md:flex justify-center md:justify-between lg:justify-between xl:justify-between items-center text-black px-7 mt-3">
+    <nav className="sm:hidden flex md:flex justify-center md:justify-between lg:justify-between xl:justify-between items-center text-black px-7 mt-3 border-b border-gray-200 pb-6">
       <p className="hidden md:block lg:block xl:block font-bold text-2xl text-indigo-700">
         Inventory
       </p>

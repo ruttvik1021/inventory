@@ -32,6 +32,7 @@ const TextField = ({
               {...field}
               disabled={disabled}
               maxLength={maxLength}
+              autoFocus="true"
               autoComplete="false"
               placeholder={placeholder}
               className={`mt-2 block w-full rounded-md border-0 py-1.5 px-3 ${

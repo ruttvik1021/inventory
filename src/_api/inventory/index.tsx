@@ -36,3 +36,53 @@ export const getAllCategoriesApi = async () => {
     return { status: 500, body: "Error" };
   }
 };
+
+export const getCategoryByIdApi = async (id: string) => {
+  try {
+    return await AuthorizedAxiosInstance.get(
+      `${inventoryUrls.getCategoryByID}/${id}`
+    )
+      .then((response: any) => {
+        return { status: response.status, body: response.data };
+      })
+      .catch((err: any) => {
+        return { status: err.response.status, body: err.response.data };
+      });
+  } catch (err) {
+    return { status: 500, body: "Error" };
+  }
+};
+export const deleteCategoryByIdApi = async (id: string) => {
+  try {
+    return await AuthorizedAxiosInstance.delete(
+      `${inventoryUrls.deleteCategory}/${id}`
+    )
+      .then((response: any) => {
+        return { status: response.status, body: response.data };
+      })
+      .catch((err: any) => {
+        return { status: err.response.status, body: err.response.data };
+      });
+  } catch (err) {
+    return { status: 500, body: "Error" };
+  }
+};
+export const updateCategoryByIdApi = async (payload: {
+  categoryName: string;
+  id: string;
+}) => {
+  try {
+    return await AuthorizedAxiosInstance.put(
+      inventoryUrls.updateCategory,
+      payload
+    )
+      .then((response: any) => {
+        return { status: response.status, body: response.data };
+      })
+      .catch((err: any) => {
+        return { status: err.response.status, body: err.response.data };
+      });
+  } catch (err) {
+    return { status: 500, body: "Error" };
+  }
+};

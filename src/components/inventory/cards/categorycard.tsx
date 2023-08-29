@@ -14,7 +14,10 @@ const CategoryCard = ({
   index,
 }: ICategoryCard) => {
   return (
-    <div className="rounded-full border-indigo-200 hover:bg-indigo-100 cursor-pointer border-2 p-4 text-md">
+    <div
+      className="rounded-full border-indigo-200 hover:bg-indigo-100 cursor-pointer border-2 p-4 text-md"
+      onClick={onClick}
+    >
       <p className="flex justify-between">
         <span>{category}</span>
         <span>{`(${productCount})`}</span>
