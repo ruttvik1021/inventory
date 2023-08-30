@@ -5,6 +5,7 @@ import ImagePicker from "./imagePicker";
 import { organizationInfoKeys } from "./constants";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import PrimaryButton from "@/components/primaryButton";
 
 const OrgForm = ({ formik, industryList }: any) => {
   const [editMode, setEditMode] = useState<boolean>(false);
@@ -14,13 +15,10 @@ const OrgForm = ({ formik, industryList }: any) => {
       <div className="space-y-12">
         <div className="border-b border-gray-900/10 pb-12">
           <div className="flex justify-end ml-3 mt-3">
-            <button
+            <PrimaryButton
+              text={editMode ? "Cancel" : "Edit"}
               onClick={() => setEditMode(!editMode)}
-              type="button"
-              className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              {editMode ? "Cancel" : "Edit"}
-            </button>
+            />
           </div>
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div className="sm:col-span-1">
@@ -106,24 +104,15 @@ const OrgForm = ({ formik, industryList }: any) => {
       </div>
 
       <div className="my-6 flex items-center justify-end gap-x-6">
-        <button
-          type="button"
-          onClick={() => router.back()}
-          className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-        >
-          Back
-        </button>
+        <PrimaryButton text={"Back"} onClick={() => router.back()} />
         {editMode && (
-          <button
-            type="submit"
+          <PrimaryButton
+            text={"Save"}
             onClick={(e: any) => {
               e.preventDefault();
               formik.handleSubmit();
             }}
-            className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            Save
-          </button>
+          />
         )}
       </div>
     </>

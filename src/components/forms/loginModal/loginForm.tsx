@@ -1,3 +1,4 @@
+import PrimaryButton from "@/components/primaryButton";
 import TextField from "@/components/textfield";
 import { IMessage, formTypes, messageEnums } from "@/contants";
 import React from "react";
@@ -57,18 +58,8 @@ const LoginForm = ({ formik, formType, setFormType, message }: ILoginForm) => {
         </div>
       )}
       <div>
-        <button
-          type="submit"
-          className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-        >
-          {formType === formTypes.LOGIN
-            ? "Sign In"
-            : formType === formTypes.SIGNUP
-            ? "Sign Up"
-            : "Send Email"}
-        </button>
-        <div>
-          <p className="font-light text-sm text-black mt-2">
+        <div className="flex justify-between">
+          <p className="font-light text-lg text-black mt-2">
             {formType === formTypes.LOGIN
               ? "Not a member ?"
               : formType === formTypes.SIGNUP
@@ -88,6 +79,16 @@ const LoginForm = ({ formik, formType, setFormType, message }: ILoginForm) => {
               {formType === formTypes.LOGIN ? "Sign up" : "Login"}
             </span>
           </p>
+          <PrimaryButton
+            text={
+              formType === formTypes.LOGIN
+                ? "Sign In"
+                : formType === formTypes.SIGNUP
+                ? "Sign Up"
+                : "Send Email"
+            }
+            onClick={formik.handleSubmit}
+          />
         </div>
       </div>
     </form>

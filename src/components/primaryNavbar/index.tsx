@@ -10,10 +10,12 @@ import NavLinks from "./navLinks";
 import LoginModal from "../forms/loginModal";
 import NavDropDown from "../navbarDropdown";
 import { useRouter } from "next/navigation";
+import Toggle from "../toggle";
+import { styleConfig } from "@/utils/styling/styleConfig";
 
 const PrimaryNavbar = () => {
   const router = useRouter();
-  const { initialAuthState, logoutUser } = useAuth();
+  const { initialAuthState, logoutUser, darkTheme, setDarkTheme } = useAuth();
   const [modalShow, setModalShow] = useState<boolean>(false);
 
   const signOutOption = { label: "Sign Out", onClick: () => logoutUser() };
@@ -30,7 +32,11 @@ const PrimaryNavbar = () => {
 
   return (
     <>
-      <nav className="flex justify-between items-center p-3 px-5  text-gray-800 border-b-2">
+      <nav
+        className={`flex justify-between items-center p-3 px-5 
+        ${darkTheme ? styleConfig.darkThemeBg : styleConfig.lightThemeBg} 
+          border-b-2 `}
+      >
         <div className="flex justify-start gap-10">
           <Link href={"/"}>
             <Image
@@ -43,6 +49,7 @@ const PrimaryNavbar = () => {
         </div>
         <div className="flex gap-5">
           <ul className="xl:flex lg:flex md:flex hidden text-lg font-medium gap-7 justify-center items-center">
+            <Toggle enabled={darkTheme} setEnabled={setDarkTheme} />
             {initialAuthState.isAuthenticated &&
               initialAuthState.companyInfoAvailable &&
               navRoutes.map(({ label, href }: any, index: number) => (

@@ -1,17 +1,17 @@
 "use client";
-import React, { createContext, useState, useEffect } from "react";
-import Cookie from "js-cookie";
-import { useRouter } from "next/navigation";
-import jwt from "jsonwebtoken";
-import { navRoutes } from "@/contants/pageroutes";
 import { getCurrentUserApi } from "@/_api/auth";
 import { getCountryListApi } from "@/_api/unauthAPIs";
+import Cookie from "js-cookie";
+import { useRouter } from "next/navigation";
+import { createContext, useEffect, useState } from "react";
 
 interface IAuthContext {
   initialAuthState: IInitialAuthState;
   loginUser: (token: string) => void;
   logoutUser: () => void;
   setInitialAuthState: (prev: IInitialAuthState) => void;
+  darkTheme: boolean;
+  setDarkTheme: (theme: boolean) => void;
 }
 
 const AuthContext = createContext<IAuthContext>({
@@ -19,11 +19,12 @@ const AuthContext = createContext<IAuthContext>({
     isAuthenticated: false,
     companyInfoAvailable: false,
     organizationLogo: "",
-    // permittedRoutes: navRoutes,
   },
   loginUser: (token: string) => {}, // Provide a dummy implementation or leave it undefined
   logoutUser: () => {}, // Provide a dummy implementation or leave it undefined
   setInitialAuthState: (prev: IInitialAuthState) => {},
+  darkTheme: false,
+  setDarkTheme: (theme: boolean) => {},
 });
 
 export interface IInitialAuthState {
@@ -35,6 +36,7 @@ export interface IInitialAuthState {
 
 const AuthProvider = ({ children }: any) => {
   const router = useRouter();
+  const [darkTheme, setDarkTheme] = useState<boolean>(false);
   const [initialAuthState, setInitialAuthState] = useState<IInitialAuthState>({
     isAuthenticated: false,
     companyInfoAvailable: false,
@@ -98,7 +100,14 @@ const AuthProvider = ({ children }: any) => {
 
   return (
     <AuthContext.Provider
-      value={{ initialAuthState, loginUser, logoutUser, setInitialAuthState }}
+      value={{
+        initialAuthState,
+        loginUser,
+        logoutUser,
+        setInitialAuthState,
+        darkTheme,
+        setDarkTheme,
+      }}
     >
       {children}
     </AuthContext.Provider>
