@@ -87,6 +87,7 @@ const LoginForm = ({ formik, formType, setFormType, message }: ILoginForm) => {
                 ? "Sign Up"
                 : "Send Email"
             }
+            className="w-1"
             onClick={formik.handleSubmit}
           />
         </div>

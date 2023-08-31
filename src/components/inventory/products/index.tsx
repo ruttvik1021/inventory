@@ -3,6 +3,7 @@ import {
   createCategoryApi,
   deleteCategoryByIdApi,
   getAllCategoriesApi,
+  getAllProductsApi,
   getCategoryByIdApi,
   updateCategoryByIdApi,
 } from "@/_api/inventory";
@@ -95,7 +96,7 @@ const products = [
 export default function Products() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
-  const [initialCategory, setInitialCategory] = useState({
+  const [initialState, setInitialState] = useState({
     editMode: false,
     newCategory: false,
     categorySelected: "",
@@ -106,14 +107,31 @@ export default function Products() {
         productsCount: 0,
       },
     ],
+    productList: [
+      {
+        productName: "",
+        categoryId: "",
+      },
+    ],
   });
 
   const getAllCategory = async () => {
     const { status, body } = await getAllCategoriesApi();
     if (status > 199 && status < 299) {
-      setInitialCategory((prev) => ({
+      setInitialState((prev) => ({
         ...prev,
         categoryList: body.categories,
+      }));
+    } else {
+      toast.error(body.message);
+    }
+  };
+  const getAllProduct = async () => {
+    const { status, body } = await getAllProductsApi();
+    if (status > 199 && status < 299) {
+      setInitialState((prev) => ({
+        ...prev,
+        productList: body.products,
       }));
     } else {
       toast.error(body.message);
@@ -122,7 +140,7 @@ export default function Products() {
   const getCategoryById = async (id: string) => {
     const { status, body } = await getCategoryByIdApi(id);
     if (status > 199 && status < 299) {
-      setInitialCategory((prev) => ({
+      setInitialState((prev) => ({
         ...prev,
         editMode: true,
         categorySelected: id,
@@ -136,7 +154,7 @@ export default function Products() {
   const deleteCategoryById = async (id: string) => {
     const { status, body } = await deleteCategoryByIdApi(id);
     if (status > 199 && status < 299) {
-      setInitialCategory((prev) => ({
+      setInitialState((prev) => ({
         ...prev,
         editMode: false,
         newCategory: false,
@@ -148,10 +166,10 @@ export default function Products() {
     }
   };
   const updateCategoryById = async (values: any) => {
-    const payload = { ...values, id: initialCategory.categorySelected };
+    const payload = { ...values, id: initialState.categorySelected };
     const { status, body } = await updateCategoryByIdApi(payload);
     if (status > 199 && status < 299) {
-      setInitialCategory((prev) => ({
+      setInitialState((prev) => ({
         ...prev,
         editMode: false,
         newCategory: false,
@@ -166,7 +184,7 @@ export default function Products() {
     const { status, body } = await createCategoryApi(payload);
     if (status > 199 && status < 299) {
       toast.success(body.message);
-      setInitialCategory((prev) => ({
+      setInitialState((prev) => ({
         ...prev,
         newCategory: !prev.newCategory,
       }));
@@ -184,15 +202,16 @@ export default function Products() {
       categoryName: Yup.string().required("Required"),
     }),
     onSubmit: (values) =>
-      initialCategory.editMode ? updateCategoryById(values) : createCat(values),
+      initialState.editMode ? updateCategoryById(values) : createCat(values),
   });
 
   useEffect(() => {
     getAllCategory();
+    getAllProduct();
   }, []);
 
   const resetCategoryModes = () => {
-    setInitialCategory((prev: any) => ({
+    setInitialState((prev: any) => ({
       ...prev,
       editMode: false,
       newCategory: false,
@@ -202,10 +221,10 @@ export default function Products() {
   };
 
   useEffect(() => {
-    if (initialCategory.newCategory === false) {
+    if (initialState.newCategory === false) {
       resetCategoryModes();
     }
-  }, [initialCategory.newCategory]);
+  }, [initialState.newCategory]);
 
   return (
     <>
@@ -221,29 +240,27 @@ export default function Products() {
                   <form onSubmit={categoryFormik.handleSubmit}>
                     <div className="flex justify-between items-center">
                       <p className="text-2xl mb-3">Categories</p>
-                      {initialCategory.newCategory ? (
+                      {initialState.newCategory ? (
                         <CloseIcon
                           className="cursor-pointer"
                           onClick={(e: any) => {
                             e.preventDefault();
-                            setInitialCategory((prev) => ({
+                            setInitialState((prev) => ({
                               ...prev,
                               newCategory: false,
                             }));
                           }}
-                          tooltip={true}
                         />
                       ) : (
                         <AddIcon
                           className="cursor-pointer"
                           onClick={(e: any) => {
                             e.preventDefault();
-                            setInitialCategory((prev) => ({
+                            setInitialState((prev) => ({
                               ...prev,
                               newCategory: true,
                             }));
                           }}
-                          tooltip={true}
                         />
                       )}
                     </div>
@@ -252,12 +269,12 @@ export default function Products() {
                       className="space-y-4 border-b pb-6 text-sm font-medium text-gray-900"
                     >
                       <CreateCategory
-                        initialState={initialCategory}
+                        initialState={initialState}
                         formik={categoryFormik}
                         deleteCategoryById={deleteCategoryById}
                       />
-                      {initialCategory.categoryList?.length &&
-                        initialCategory.categoryList?.map(
+                      {initialState.categoryList?.length &&
+                        initialState.categoryList?.map(
                           (item: any, index: number) => (
                             <CategoryCard
                               key={`${item.category}-${index}`}
@@ -277,9 +294,14 @@ export default function Products() {
                     <div className="bg-white">
                       <div className="mx-auto max-w-2xl px-4 sm:px-6  lg:max-w-7xl lg:px-8">
                         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-                          {products.map((item: any) => (
+                          {initialState.productList.map((item: any) => (
                             <ProductCard
                               product={item}
+                              categoryName={
+                                initialState.categoryList?.find(
+                                  (e) => item.categoryId === e.id
+                                )?.categoryName || ""
+                              }
                               onClick={() => alert(item.name)}
                             />
                           ))}

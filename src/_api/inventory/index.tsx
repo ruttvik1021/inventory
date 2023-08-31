@@ -86,3 +86,17 @@ export const updateCategoryByIdApi = async (payload: {
     return { status: 500, body: "Error" };
   }
 };
+
+export const getAllProductsApi = async () => {
+  try {
+    return await AuthorizedAxiosInstance.get(inventoryUrls.getAllProducts)
+      .then((response: any) => {
+        return { status: response.status, body: response.data };
+      })
+      .catch((err: any) => {
+        return { status: err.response.status, body: err.response.data };
+      });
+  } catch (err) {
+    return { status: 500, body: "Error" };
+  }
+};

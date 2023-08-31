@@ -20,6 +20,8 @@ const inventoryUrls = {
   updateCategory: "/api/update/category",
   deleteCategory: "/api/delete/category",
   getCategoryByID: "/api/getCategory",
+
+  getAllProducts: "/api/getAll/Products",
 };
 
 export { baseUrls, authUrls, inventoryUrls };
