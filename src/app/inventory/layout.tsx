@@ -8,7 +8,7 @@ export default function RootLayout({
   return (
     <>
       <InventoryNavbar />
-      <main className="p-5">{children}</main>
+      <main className="px-5 py-2">{children}</main>
     </>
   );
 }

@@ -1,9 +1,13 @@
+import DeleteIcon from "@/utils/images/icons/deleteIcon";
+import EditIcon from "@/utils/images/icons/editIcon";
 import React from "react";
 
 interface ICategoryCard {
   category: string;
   productCount: number;
   onClick?: () => void;
+  onEditClick?: () => void;
+  onDeleteClick?: () => void;
   index?: number;
 }
 
@@ -11,17 +15,23 @@ const CategoryCard = ({
   category,
   productCount,
   onClick,
+  onEditClick,
+  onDeleteClick,
   index,
 }: ICategoryCard) => {
   return (
-    <div
-      className="rounded-full border-indigo-200 hover:bg-indigo-100 cursor-pointer border-2 p-4 text-md"
-      onClick={onClick}
-    >
-      <p className="flex justify-between">
-        <span>{category}</span>
-        <span>{`(${productCount})`}</span>
-      </p>
+    <div className="rounded-lg border-indigo-200 grid grid-cols-1 sm:grid-cols-6 border-2 items-center">
+      <div
+        className="sm:col-span-4 hover:text-indigo-700 hover:font-bold p-4 cursor-pointer flex gap-2"
+        onClick={onClick}
+      >
+        <p>{category}</p>
+        <p>{`(${productCount})`}</p>
+      </div>
+      <div className="sm:col-span-2 flex justify-around gap-1 p-4">
+        {onEditClick && <EditIcon onClick={onEditClick} />}
+        {onDeleteClick && <DeleteIcon onClick={onDeleteClick} />}
+      </div>
     </div>
   );
 };

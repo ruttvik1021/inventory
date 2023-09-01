@@ -22,6 +22,8 @@ const inventoryUrls = {
   getCategoryByID: "/api/getCategory",
 
   getAllProducts: "/api/getAll/Products",
+  getProductById: "/api/getProduct",
+  getProductByCategory: "/api/getProduct/category",
 };
 
 export { baseUrls, authUrls, inventoryUrls };

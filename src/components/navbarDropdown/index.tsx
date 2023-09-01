@@ -55,16 +55,7 @@ const NavDropDown = ({ options, orgLogo }: IProps) => {
                 <a
                   onClick={item.onClick}
                   key={`${item.label}-${index}`}
-                  className={
-                    `block px-4 py-2 text-sm hover:bg-indigo-${
-                      darkTheme ? "400" : "200"
-                    }  `
-                    // ${
-                    //   darkTheme
-                    //     ? styleConfig.darkThemeText
-                    //     : styleConfig.lightThemeText
-                    // }
-                  }
+                  className={`block px-4 py-2 text-sm cursor-pointer hover:bg-indigo-200`}
                 >
                   {item.label}
                 </a>

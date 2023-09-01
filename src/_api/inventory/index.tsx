@@ -100,3 +100,34 @@ export const getAllProductsApi = async () => {
     return { status: 500, body: "Error" };
   }
 };
+
+export const getProductByIdApi = async (id: string) => {
+  try {
+    return await AuthorizedAxiosInstance.get(
+      `${inventoryUrls.getProductById}/${id}`
+    )
+      .then((response: any) => {
+        return { status: response.status, body: response.data };
+      })
+      .catch((err: any) => {
+        return { status: err.response.status, body: err.response.data };
+      });
+  } catch (err) {
+    return { status: 500, body: "Error" };
+  }
+};
+export const getProductByCategoryApi = async (id: string) => {
+  try {
+    return await AuthorizedAxiosInstance.get(
+      `${inventoryUrls.getProductByCategory}/${id}`
+    )
+      .then((response: any) => {
+        return { status: response.status, body: response.data };
+      })
+      .catch((err: any) => {
+        return { status: err.response.status, body: err.response.data };
+      });
+  } catch (err) {
+    return { status: 500, body: "Error" };
+  }
+};

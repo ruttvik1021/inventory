@@ -5,105 +5,36 @@ import {
   getAllCategoriesApi,
   getAllProductsApi,
   getCategoryByIdApi,
+  getProductByCategoryApi,
+  getProductByIdApi,
   updateCategoryByIdApi,
 } from "@/_api/inventory";
-import DeleteButton from "@/components/deleteButton";
-import PrimaryButton from "@/components/primaryButton";
-import TextField from "@/components/textfield";
+import ProductForm from "@/components/forms/productform";
+import {
+  IProduct,
+  ProductInitialValues,
+  ProductYup,
+} from "@/components/forms/productform/constants";
 import AddIcon from "@/utils/images/icons/addIcon";
 import { CloseIcon } from "@/utils/images/icons/closeIcon";
-import { Dialog, Transition } from "@headlessui/react";
-import { FunnelIcon } from "@heroicons/react/20/solid";
-import { XMarkIcon } from "@heroicons/react/24/outline";
 import { FormikProvider, useFormik } from "formik";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
+import * as Yup from "yup";
 import CategoryCard from "../cards/categorycard";
 import ProductCard from "../cards/productcard";
-import * as Yup from "yup";
-import { toast } from "react-hot-toast";
+import { InitialInventoryState } from "./constants";
 import CreateCategory from "./createCategory";
 
-const products = [
-  {
-    id: 1,
-    name: "Basic Tee",
-    imageSrc:
-      "https://d19hn3jcfcdeky.cloudfront.net/1ada7049ce009cb9e2715fd84744c362-6eff17b0faa34db388bbe96d156be13d.png?o=4592119&r=savemartdpn&trackingId=b07a224bfc04d798ac445704d550b1b2&pid=f1f6a172b994ba77b08db6d4909978679286fa45d04419955d1939001c77e13d",
-    price: "$35",
-    color: "Black",
-    category: "Totes",
-  },
-  {
-    id: 2,
-    name: "Basic TShirt",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    price: "$35",
-    color: "Black",
-  },
-  {
-    id: 3,
-    name: "Basic Shirt",
-    href: "#",
-    imageSrc:
-      "https://img.swiftlycontent.net/images/789d3a15-318c-44fd-9ee0-9e11f48c13d5/presized/dt_1x.png",
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "$35",
-    color: "Black",
-  },
-  {
-    id: 2,
-    name: "Basic TShirt",
-    href: "#",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "$35",
-    color: "Black",
-  },
-  {
-    id: 3,
-    name: "Basic Shirt",
-    href: "#",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "$35",
-    color: "Black",
-  },
-  {
-    id: 2,
-    name: "Basic TShirt",
-    href: "#",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "$35",
-    color: "Black",
-  },
-  {
-    id: 3,
-    name: "Basic Shirt",
-    href: "#",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "$35",
-    color: "Black",
-  },
-];
-
-export default function Products() {
-  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-
-  const [initialState, setInitialState] = useState({
-    editMode: false,
+const Products = () => {
+  const [initialState, setInitialState] = useState<InitialInventoryState>({
+    editCategory: false,
     newCategory: false,
     categorySelected: "",
     categoryList: [
       {
-        categoryName: "",
-        id: null,
+        categoryName: "All Category",
+        id: "All",
         productsCount: 0,
       },
     ],
@@ -111,14 +42,16 @@ export default function Products() {
       {
         productName: "",
         categoryId: "",
+        _id: "",
       },
     ],
+    editProduct: false,
   });
 
   const getAllCategory = async () => {
     const { status, body } = await getAllCategoriesApi();
     if (status > 199 && status < 299) {
-      setInitialState((prev) => ({
+      setInitialState((prev: InitialInventoryState) => ({
         ...prev,
         categoryList: body.categories,
       }));
@@ -129,7 +62,7 @@ export default function Products() {
   const getAllProduct = async () => {
     const { status, body } = await getAllProductsApi();
     if (status > 199 && status < 299) {
-      setInitialState((prev) => ({
+      setInitialState((prev: InitialInventoryState) => ({
         ...prev,
         productList: body.products,
       }));
@@ -140,9 +73,9 @@ export default function Products() {
   const getCategoryById = async (id: string) => {
     const { status, body } = await getCategoryByIdApi(id);
     if (status > 199 && status < 299) {
-      setInitialState((prev) => ({
+      setInitialState((prev: InitialInventoryState) => ({
         ...prev,
-        editMode: true,
+        editCategory: true,
         categorySelected: id,
         newCategory: true,
       }));
@@ -151,12 +84,41 @@ export default function Products() {
       toast.error(body.message);
     }
   };
+  const getProductById = async (id: string) => {
+    const { status, body } = await getProductByIdApi(id);
+    if (status > 199 && status < 299) {
+      setInitialState((prev: InitialInventoryState) => ({
+        ...prev,
+        editProduct: true,
+      }));
+      productFormik.setValues(body.product);
+      console.log(body.product);
+    } else {
+      toast.error(body.message);
+    }
+  };
+  const getProductByCategory = async (id: string) => {
+    const { status, body } =
+      id === "All"
+        ? await getAllCategoriesApi()
+        : await getProductByCategoryApi(id);
+    if (status > 199 && status < 299) {
+      setInitialState((prev: InitialInventoryState) => ({
+        ...prev,
+        productList: body.productList,
+      }));
+      productFormik.setValues(body.product);
+      console.log(body.product);
+    } else {
+      toast.error(body.message);
+    }
+  };
   const deleteCategoryById = async (id: string) => {
     const { status, body } = await deleteCategoryByIdApi(id);
     if (status > 199 && status < 299) {
-      setInitialState((prev) => ({
+      setInitialState((prev: InitialInventoryState) => ({
         ...prev,
-        editMode: false,
+        editCategory: false,
         newCategory: false,
       }));
       toast.success(body.message);
@@ -169,9 +131,9 @@ export default function Products() {
     const payload = { ...values, id: initialState.categorySelected };
     const { status, body } = await updateCategoryByIdApi(payload);
     if (status > 199 && status < 299) {
-      setInitialState((prev) => ({
+      setInitialState((prev: InitialInventoryState) => ({
         ...prev,
-        editMode: false,
+        editCategory: false,
         newCategory: false,
       }));
       toast.success(body.message);
@@ -184,7 +146,7 @@ export default function Products() {
     const { status, body } = await createCategoryApi(payload);
     if (status > 199 && status < 299) {
       toast.success(body.message);
-      setInitialState((prev) => ({
+      setInitialState((prev: InitialInventoryState) => ({
         ...prev,
         newCategory: !prev.newCategory,
       }));
@@ -202,7 +164,17 @@ export default function Products() {
       categoryName: Yup.string().required("Required"),
     }),
     onSubmit: (values) =>
-      initialState.editMode ? updateCategoryById(values) : createCat(values),
+      initialState.editCategory
+        ? updateCategoryById(values)
+        : createCat(values),
+  });
+  const productFormik = useFormik({
+    initialValues: ProductInitialValues,
+    validationSchema: ProductYup,
+    onSubmit: (values) =>
+      initialState.editCategory
+        ? updateCategoryById(values)
+        : createCat(values),
   });
 
   useEffect(() => {
@@ -211,9 +183,10 @@ export default function Products() {
   }, []);
 
   const resetCategoryModes = () => {
-    setInitialState((prev: any) => ({
+    setInitialState((prev: InitialInventoryState) => ({
       ...prev,
-      editMode: false,
+      editCategory: false,
+      editProduct: false,
       newCategory: false,
       categorySelected: "",
     }));
@@ -228,93 +201,121 @@ export default function Products() {
 
   return (
     <>
-      <FormikProvider value={categoryFormik}>
-        <div className="bg-white">
-          <div>
-            <main>
-              <section
-                aria-labelledby="products-heading"
-                className="pb-24 pt-6"
-              >
-                <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4 ">
-                  <form onSubmit={categoryFormik.handleSubmit}>
-                    <div className="flex justify-between items-center">
-                      <p className="text-2xl mb-3">Categories</p>
-                      {initialState.newCategory ? (
-                        <CloseIcon
-                          className="cursor-pointer"
-                          onClick={(e: any) => {
-                            e.preventDefault();
-                            setInitialState((prev) => ({
-                              ...prev,
-                              newCategory: false,
-                            }));
-                          }}
-                        />
-                      ) : (
-                        <AddIcon
-                          className="cursor-pointer"
-                          onClick={(e: any) => {
-                            e.preventDefault();
-                            setInitialState((prev) => ({
-                              ...prev,
-                              newCategory: true,
-                            }));
-                          }}
-                        />
-                      )}
-                    </div>
-                    <ul
-                      role="list"
-                      className="space-y-4 border-b pb-6 text-sm font-medium text-gray-900"
-                    >
-                      <CreateCategory
-                        initialState={initialState}
-                        formik={categoryFormik}
-                        deleteCategoryById={deleteCategoryById}
+      <div className="bg-white">
+        <div>
+          <section aria-labelledby="products-heading" className="pb-24">
+            <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4 ">
+              <FormikProvider value={categoryFormik}>
+                <form onSubmit={categoryFormik.handleSubmit}>
+                  <div className="flex justify-between items-center">
+                    <p className="text-2xl mb-3">Categories</p>
+                    {initialState.newCategory ? (
+                      <CloseIcon
+                        className="w-6 h-6 cursor-pointer"
+                        onClick={(e: any) => {
+                          e.preventDefault();
+                          setInitialState((prev: InitialInventoryState) => ({
+                            ...prev,
+                            newCategory: false,
+                          }));
+                        }}
                       />
-                      {initialState.categoryList?.length &&
-                        initialState.categoryList?.map(
+                    ) : (
+                      <AddIcon
+                        className="w-6 h-6 cursor-pointer"
+                        onClick={(e: any) => {
+                          e.preventDefault();
+                          setInitialState((prev: InitialInventoryState) => ({
+                            ...prev,
+                            newCategory: true,
+                          }));
+                        }}
+                      />
+                    )}
+                  </div>
+                  <ul
+                    role="list"
+                    className="space-y-4 border-b pb-6 text-sm font-medium text-gray-900"
+                  >
+                    <CreateCategory
+                      initialState={initialState}
+                      formik={categoryFormik}
+                      deleteCategoryById={deleteCategoryById}
+                    />
+                    {initialState.categoryList?.length ? (
+                      <>
+                        <CategoryCard
+                          key={`All Category`}
+                          category={"All Category"}
+                          productCount={initialState.productList?.length || 0}
+                          onClick={() => getAllCategory()}
+                        />
+
+                        {initialState.categoryList?.map(
                           (item: any, index: number) => (
                             <CategoryCard
                               key={`${item.category}-${index}`}
                               category={item?.categoryName}
                               productCount={item?.productsCount}
-                              onClick={() => getCategoryById(item.id)}
+                              onClick={() => getProductByCategory(item.id)}
+                              onEditClick={() => getCategoryById(item.id)}
+                              onDeleteClick={() => deleteCategoryById(item.id)}
                             />
                           )
                         )}
-                    </ul>
-                  </form>
+                      </>
+                    ) : null}
+                  </ul>
+                </form>
+              </FormikProvider>
 
-                  {/* Product grid */}
-                  <div className="lg:col-span-3 ">
-                    {/* Your content */}
-
-                    <div className="bg-white">
-                      <div className="mx-auto max-w-2xl px-4 sm:px-6  lg:max-w-7xl lg:px-8">
-                        <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-                          {initialState.productList.map((item: any) => (
-                            <ProductCard
-                              product={item}
-                              categoryName={
-                                initialState.categoryList?.find(
-                                  (e) => item.categoryId === e.id
-                                )?.categoryName || ""
-                              }
-                              onClick={() => alert(item.name)}
-                            />
-                          ))}
-                        </div>
+              {/* Product grid */}
+              <div className="lg:col-span-3">
+                <div className="bg-white">
+                  <div className="mx-auto max-w-2xl px-4 sm:px-6  lg:max-w-7xl lg:px-8">
+                    {!initialState.editProduct ? (
+                      <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+                        {initialState.productList.length
+                          ? initialState.productList?.map((item: any) => (
+                              <ProductCard
+                                product={item}
+                                categoryName={
+                                  initialState.categoryList?.find(
+                                    (e) => item.categoryId === e.id
+                                  )?.categoryName || ""
+                                }
+                                onClick={() => getProductById(item._id)}
+                              />
+                            ))
+                          : "No Product to Show"}
                       </div>
-                    </div>
+                    ) : (
+                      <FormikProvider value={productFormik}>
+                        <form onSubmit={productFormik.handleSubmit}>
+                          <ProductForm
+                            categoryList={initialState.categoryList}
+                            formik={productFormik}
+                            close={() =>
+                              setInitialState(
+                                (prev: InitialInventoryState) => ({
+                                  ...prev,
+                                  editProduct: false,
+                                })
+                              )
+                            }
+                          />
+                        </form>
+                      </FormikProvider>
+                    )}
                   </div>
                 </div>
-              </section>
-            </main>
-          </div>
+              </div>
+            </div>
+          </section>
         </div>
-      </FormikProvider>
+      </div>
     </>
   );
-}
+};
+
+export default Products;

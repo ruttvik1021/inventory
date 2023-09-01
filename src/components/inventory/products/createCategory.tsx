@@ -1,9 +1,10 @@
 import DeleteButton from "@/components/deleteButton";
 import PrimaryButton from "@/components/primaryButton";
 import TextField from "@/components/textfield";
+import { InitialInventoryState } from "./constants";
 
 interface IProps {
-  initialState: any;
+  initialState: InitialInventoryState;
   formik: any;
   deleteCategoryById: (id: string) => void;
 }
@@ -25,18 +26,19 @@ const CreateCategory = ({
           />
         </div>
         <div className="flex justify-between mt-2 p-1 gap-2">
-          {initialState.editMode && (
+          {initialState.editCategory && (
             <DeleteButton
               text={"Delete"}
               onClick={() => deleteCategoryById(initialState.categorySelected)}
             />
           )}
           <PrimaryButton
-            text={initialState.editMode ? "Update" : "Create"}
+            text={initialState.editCategory ? "Update" : "Create"}
             onClick={(e: any) => {
               e.preventDefault();
               formik.handleSubmit();
             }}
+            className={!initialState.editCategory ? "w-full" : ""}
           />
         </div>
       </div>
