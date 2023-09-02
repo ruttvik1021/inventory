@@ -10,12 +10,18 @@ export interface InitialInventoryState {
   categoryList: {
     categoryName: string;
     id: null | string;
-    productsCount: number;
+    productsCount?: number;
   }[];
   productList: {
     productName: string;
     categoryId: string;
-    _id: string;
+    id: string;
   }[];
+  totalproducts: number;
   editProduct: boolean;
+  viewProduct: boolean;
+  deleteModal: {
+    deleteId: null | string;
+    deleteType: string;
+  };
 }

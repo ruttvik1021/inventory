@@ -135,7 +135,7 @@ const LoginModal = ({ show, setShow, onBlur }: IModal) => {
   });
 
   return (
-    <Modal show={show} setShow={setShow} onBlur={false}>
+    <Modal show={show} setShow={setShow} onBlur={false} size="smallSize">
       <div>
         <p className="font-semibold text-lg text-indigo-600 hover:text-indigo-500">
           {getTitle()}

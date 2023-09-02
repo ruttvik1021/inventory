@@ -17,7 +17,6 @@ const OrgForm = ({ formik, industryList }: any) => {
         <div className="border-b border-gray-900/10 pb-12">
           <div className="flex justify-between ml-3 mt-3">
             <ArrowIcon direction={"Left"} onClick={() => router.back()} />
-            {/* <PrimaryButton text={"Back"}  /> */}
             <PrimaryButton
               text={editMode ? "Cancel" : "Edit"}
               onClick={() => setEditMode(!editMode)}

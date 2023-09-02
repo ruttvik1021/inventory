@@ -49,7 +49,7 @@ const PrimaryNavbar = () => {
         </div>
         <div className="flex gap-5">
           <ul className="xl:flex lg:flex md:flex hidden text-lg font-medium gap-7 justify-center items-center">
-            <Toggle enabled={darkTheme} setEnabled={setDarkTheme} />
+            {/* <Toggle enabled={darkTheme} setEnabled={setDarkTheme} /> */}
             {initialAuthState.isAuthenticated &&
               initialAuthState.companyInfoAvailable &&
               navRoutes.map(({ label, href }: any, index: number) => (

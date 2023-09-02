@@ -44,7 +44,7 @@ const LoginForm = ({ formik, formType, setFormType, message }: ILoginForm) => {
           )}
         </div>
       )}
-      {message && (
+      {message ? (
         <div className=" text-center mt-1">
           <p
             className={`font-semibold text-sm ${
@@ -56,10 +56,10 @@ const LoginForm = ({ formik, formType, setFormType, message }: ILoginForm) => {
             {message.message}
           </p>
         </div>
-      )}
+      ) : null}
       <div>
         <div className="flex justify-between">
-          <p className="font-light text-lg text-black mt-2">
+          <p className="font-light text-lg text-black">
             {formType === formTypes.LOGIN
               ? "Not a member ?"
               : formType === formTypes.SIGNUP
@@ -79,18 +79,18 @@ const LoginForm = ({ formik, formType, setFormType, message }: ILoginForm) => {
               {formType === formTypes.LOGIN ? "Sign up" : "Login"}
             </span>
           </p>
-          <PrimaryButton
-            text={
-              formType === formTypes.LOGIN
-                ? "Sign In"
-                : formType === formTypes.SIGNUP
-                ? "Sign Up"
-                : "Send Email"
-            }
-            className="w-1"
-            onClick={formik.handleSubmit}
-          />
         </div>
+        <PrimaryButton
+          text={
+            formType === formTypes.LOGIN
+              ? "Sign In"
+              : formType === formTypes.SIGNUP
+              ? "Sign Up"
+              : "Send Email"
+          }
+          className="w-full mt-2"
+          onClick={formik.handleSubmit}
+        />
       </div>
     </form>
   );

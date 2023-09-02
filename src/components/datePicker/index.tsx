@@ -1,25 +1,14 @@
-import React from "react";
-import { Formik, Field, ErrorMessage } from "formik";
+import { Field } from "formik";
 
-interface ITextField {
-  type: "text" | "password";
+interface IDateField {
   required?: boolean;
   label: string;
   name: string;
-  placeholder: string;
   disabled?: boolean;
-  maxLength?: number;
+  value?: any;
 }
 
-const TextField = ({
-  type,
-  required,
-  label,
-  name,
-  placeholder,
-  disabled,
-  maxLength,
-}: ITextField) => {
+const Datepicker = ({ required, label, name, disabled, value }: IDateField) => {
   return (
     <>
       <label>{label}</label>
@@ -28,14 +17,11 @@ const TextField = ({
         {({ field, meta }: any) => (
           <div>
             <input
-              type={type}
+              type="date"
               {...field}
               disabled={disabled}
-              maxLength={maxLength}
-              // autoFocus="true"
-              autoComplete="false"
-              placeholder={placeholder}
-              className={`mt-2 block w-full rounded-md border-0 py-2 px-3 ${
+              defaultValue={value}
+              className={`mt-2 block w-full rounded-md border-0 py-1.5 px-3 ${
                 meta.touched && meta.error && "ring-red-600"
               } text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-100 sm:text-sm sm:leading-6 `}
             />
@@ -49,4 +35,4 @@ const TextField = ({
   );
 };
 
-export default TextField;
+export default Datepicker;
