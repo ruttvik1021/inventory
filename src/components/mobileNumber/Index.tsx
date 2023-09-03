@@ -1,8 +1,8 @@
-import React from "react";
-import AutoComplete from "../autocomplete";
+// import React from "react";
+// import AutoComplete from "../autocomplete";
 
-const MobileInput = () => {
-  return <></>;
-};
+// const MobileInput = () => {
+//   return <></>;
+// };
 
-export default MobileInput;
+// export default MobileInput;

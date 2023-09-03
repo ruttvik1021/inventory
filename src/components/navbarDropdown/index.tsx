@@ -51,10 +51,9 @@ const NavDropDown = ({ options, orgLogo }: IProps) => {
         >
           <div className="py-1">
             {options.map((item: IDropOptions, index: number) => (
-              <Menu.Item>
+              <Menu.Item key={`${item.label}-${index}`}>
                 <a
                   onClick={item.onClick}
-                  key={`${item.label}-${index}`}
                   className={`block px-4 py-2 text-sm cursor-pointer hover:bg-indigo-200`}
                 >
                   {item.label}
