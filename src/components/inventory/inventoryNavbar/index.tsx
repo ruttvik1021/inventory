@@ -17,7 +17,12 @@ const InventoryNavbar = () => {
       </p>
       <ul className="flex gap-5">
         {inventorySubRoutes.map((item: any, index: number) => (
-          <NavLinks label={item.label} href={item.href} index={index} />
+          <NavLinks
+            label={item.label}
+            href={item.href}
+            index={index}
+            key={`${item.label}-${index}`}
+          />
         ))}
       </ul>
     </nav>

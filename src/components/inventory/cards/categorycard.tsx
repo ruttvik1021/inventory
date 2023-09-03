@@ -9,6 +9,7 @@ interface ICategoryCard {
   onDeleteClick?: () => void;
   index?: number;
   id?: string;
+  categorySelected?: string;
 }
 
 const CategoryCard = ({
@@ -17,13 +18,18 @@ const CategoryCard = ({
   onClick,
   onEditClick,
   onDeleteClick,
+  categorySelected,
   id,
 }: ICategoryCard) => {
   return (
     <>
-      <div className="rounded-lg border-indigo-200 grid grid-cols-1 sm:grid-cols-6 border-2 items-center">
+      <div
+        className={`flex justify-between rounded-lg border-indigo-200 border-2 items-center ${
+          categorySelected === id ? "bg-indigo-300" : ""
+        }`}
+      >
         <div
-          className="sm:col-span-4 hover:text-indigo-700 hover:font-bold p-4 cursor-pointer flex gap-2"
+          className="over:text-indigo-700 hover:font-bold p-4 cursor-pointer flex gap-2"
           onClick={onClick}
         >
           <p>{category}</p>

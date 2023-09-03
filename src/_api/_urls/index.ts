@@ -25,6 +25,8 @@ const inventoryUrls = {
   getProductById: "/api/getProduct",
   getProductByCategory: "/api/getProduct/category",
   addProduct: "/api/add/product",
+  updateProduct: "/api/update/product",
+  deleteProduct: "/api/delete/product",
 };
 
 export { baseUrls, authUrls, inventoryUrls };

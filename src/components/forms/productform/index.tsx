@@ -9,12 +9,15 @@ import Datepicker from "@/components/datePicker";
 import Checkbox from "@/components/checkbox";
 import ImagePicker from "../organizationForm/imagePicker";
 import { CloseIcon } from "@/utils/images/icons/closeIcon";
+import Modal from "@/components/modalTemplate/Modal";
 
 const ProductForm = ({ formik, close, initialState, editMode }: any) => {
   const removeImage = (index: number) => {
     formik.values.images.splice(index, 1);
     formik.setFieldValue(productFormKeys.images, formik.values.images);
   };
+
+  const [enlarge, setEnlarge] = useState<null | string>(null);
 
   return (
     <>
@@ -116,31 +119,47 @@ const ProductForm = ({ formik, close, initialState, editMode }: any) => {
                 value={formik.values.stockDate}
               />
             </div>
-            {editMode ? (
-              <div className="sm:col-span-4">
-                <ImagePicker
-                  name={productFormKeys.images}
-                  formik={formik}
-                  multiple={true}
-                />
-              </div>
-            ) : null}
           </div>
-          <div className="flex flex-wrap mt-4 gap-5">
-            {formik.values.images.map((item: any, index: number) => (
-              <div>
-                {editMode ? (
-                  <div className="flex justify-end gap-3">
-                    <CloseIcon
-                      onClick={() => removeImage(index)}
-                      className="cursor-pointer w-8"
-                    />
-                  </div>
-                ) : null}
-                <img src={item} alt="Product Image" width={"200px"} />
-              </div>
-            ))}
+          <div className="mt-2">
+            <TextField
+              type={"textarea"}
+              label={"Description"}
+              name={productFormKeys.description}
+              placeholder={"Description"}
+              disabled={!editMode}
+            />
           </div>
+
+          {editMode ? (
+            <div className="sm:col-span-4">
+              <ImagePicker
+                name={productFormKeys.images}
+                formik={formik}
+                multiple={true}
+              />
+            </div>
+          ) : null}
+        </div>
+        <div className="flex flex-wrap mt-4 gap-5">
+          {formik.values.images.map((item: any, index: number) => (
+            <div key={item}>
+              {editMode ? (
+                <div className="flex justify-end gap-3">
+                  <CloseIcon
+                    onClick={() => removeImage(index)}
+                    className="cursor-pointer w-8"
+                  />
+                </div>
+              ) : null}
+              <img
+                src={item}
+                alt="Product Image"
+                width={"200"}
+                height={"200"}
+                onClick={() => setEnlarge(String(index))}
+              />
+            </div>
+          ))}
         </div>
       </div>
 
@@ -156,6 +175,23 @@ const ProductForm = ({ formik, close, initialState, editMode }: any) => {
           />
         )}
       </div>
+      <Modal
+        show={enlarge ? true : false}
+        setShow={() => setEnlarge(null)}
+        onBlur={true}
+        size={"mediumSize"}
+      >
+        {enlarge && (
+          <div>
+            <img
+              src={formik.values.images[Number(enlarge)]}
+              alt="Product Image"
+              width={"500"}
+              height={"500"}
+            />
+          </div>
+        )}
+      </Modal>
     </>
   );
 };

@@ -4,9 +4,9 @@ import { CloseIcon } from "@/utils/images/icons/closeIcon";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useRef } from "react";
 
-const smallSize = "w-full sm:w-full md:w-1/3 lg:w-1/3 xl:w-1/3";
-const mediumSize = "w-full sm:w-1/2 md:w-1/2 lg:w-1/2 xl:w-1/2";
-const largeSize = "w-full";
+const smallSize = "w-full sm:w-full md:w-1/3 lg:w-1/3 xl:w-1/3 h-full";
+const mediumSize = "w-full sm:w-1/2 md:w-1/2 lg:w-1/2 xl:w-1/2 h-full";
+const largeSize = "w-full h-full";
 
 const Modal = ({
   children,
@@ -30,7 +30,7 @@ const Modal = ({
         initialFocus={cancelButtonRef}
         onClose={onBlur ? () => setShow(false) : () => setShow(true)} // This ensures the modal is closed only when this function is called
       >
-        <div className={`flex min-h-screen items-center justify-center`}>
+        <div className={`flex items-center justify-center`}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-100"
@@ -40,7 +40,7 @@ const Modal = ({
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+            <Dialog.Overlay className="fixed inset-0 bg-gray-400 bg-opacity-75 transition-opacity" />
           </Transition.Child>
 
           <Transition.Child

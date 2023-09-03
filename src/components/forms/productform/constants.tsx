@@ -15,6 +15,7 @@ export interface IProduct {
   lowQuantity: number;
   images: string[];
   stockDate: any;
+  description: string;
 }
 
 export const ProductInitialValues: IProduct = {
@@ -28,8 +29,9 @@ export const ProductInitialValues: IProduct = {
   notifyWhenLow: true,
   newCategory: false,
   lowQuantity: 0,
-  images: [""],
+  images: [],
   stockDate: moment().format("YYYY-MM-DD"),
+  description: "",
 };
 
 export const ProductYup = Yup.object({
@@ -47,17 +49,7 @@ export const ProductYup = Yup.object({
   notifyWhenLow: Yup.boolean(),
   stockDate: Yup.string().required("Required"),
   newCategory: Yup.boolean(),
-  // images: Yup.array()
-  //   .of(Yup.string())
-  //   .test("is-strings-array", "Invalid Images", (value) => {
-  //     if (
-  //       Array.isArray(value) &&
-  //       value.every((item) => typeof item === "string")
-  //     ) {
-  //       return true;
-  //     }
-  //     return false;
-  //   }),
+  description: Yup.string().nullable(),
 });
 
 export const productFormKeys = {
@@ -75,6 +67,7 @@ export const productFormKeys = {
   images: "images",
   stockDate: "stockDate",
   newCategoryName: "newCategoryName",
+  description: "description",
 };
 
 export const discountTypes = [

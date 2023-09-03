@@ -136,12 +136,45 @@ export const addProductAPI = async (payload: any) => {
   try {
     return await AuthorizedAxiosInstance.post(inventoryUrls.addProduct, payload)
       .then((response: any) => {
-        return { status: response.status, body: response.body };
+        return { status: response.status, body: response.data };
       })
       .catch((err: any) => {
         return { status: err.response.status, body: err.response.data };
       });
   } catch (error) {
+    return { status: 500, body: "Error" };
+  }
+};
+
+export const updateProductAPI = async (payload: any, id: string) => {
+  try {
+    return await AuthorizedAxiosInstance.put(
+      `${inventoryUrls.updateProduct}/${id}`,
+      payload
+    )
+      .then((response: any) => {
+        return { status: response.status, body: response.data };
+      })
+      .catch((err: any) => {
+        return { status: err.response.status, body: err.response.data };
+      });
+  } catch (error) {
+    return { status: 500, body: "Error" };
+  }
+};
+
+export const deleteProductByIdApi = async (id: string) => {
+  try {
+    return await AuthorizedAxiosInstance.delete(
+      `${inventoryUrls.deleteProduct}/${id}`
+    )
+      .then((response: any) => {
+        return { status: response.status, body: response.data };
+      })
+      .catch((err: any) => {
+        return { status: err.response.status, body: err.response.data };
+      });
+  } catch (err) {
     return { status: 500, body: "Error" };
   }
 };

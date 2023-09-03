@@ -19,9 +19,9 @@ const NavLinks = ({ label, href, index }: INavLinks) => {
           : ""
       }`}
       key={`${label}-${href}${index && `-${index}`}`}
-      onClick={() => router.push(href)}
+      onClick={() => router.replace(href)}
       tabIndex={0}
-      onKeyDown={(e) => e.key === "Enter" && router.push(href)}
+      onKeyDown={(e) => e.key === "Enter" && router.replace(href)}
     >
       {label}
     </p>

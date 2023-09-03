@@ -7,6 +7,7 @@ export interface InitialInventoryState {
   editCategory: boolean;
   newCategory: boolean;
   categorySelected: string;
+  productSelected: string;
   categoryList: {
     categoryName: string;
     id: null | string;

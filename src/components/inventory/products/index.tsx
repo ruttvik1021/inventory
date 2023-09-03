@@ -3,12 +3,14 @@ import {
   addProductAPI,
   createCategoryApi,
   deleteCategoryByIdApi,
+  deleteProductByIdApi,
   getAllCategoriesApi,
   getAllProductsApi,
   getCategoryByIdApi,
   getProductByCategoryApi,
   getProductByIdApi,
   updateCategoryByIdApi,
+  updateProductAPI,
 } from "@/_api/inventory";
 import ProductForm from "@/components/forms/productform";
 import {
@@ -29,6 +31,8 @@ import CreateCategory from "./createCategory";
 import ConfirmationModal from "@/components/confirmationModal";
 import PrimaryButton from "@/components/primaryButton";
 import ArrowIcon from "@/utils/images/icons/arrowIcon";
+import moment from "moment";
+import DeleteButton from "@/components/deleteButton";
 
 const Products = () => {
   const ToDelete = {
@@ -44,6 +48,7 @@ const Products = () => {
     editCategory: false,
     newCategory: false,
     categorySelected: "",
+    productSelected: "",
     categoryList: [
       {
         categoryName: "All Category",
@@ -51,13 +56,7 @@ const Products = () => {
         productsCount: 0,
       },
     ],
-    productList: [
-      {
-        productName: "",
-        categoryId: "",
-        id: "",
-      },
-    ],
+    productList: [],
     totalproducts: 0,
     editProduct: false,
     viewProduct: false,
@@ -79,7 +78,8 @@ const Products = () => {
   const productFormik = useFormik({
     initialValues: ProductInitialValues,
     validationSchema: ProductYup,
-    onSubmit: (values) => addProduct(values),
+    onSubmit: (values) =>
+      initialState.productSelected ? updateProduct(values) : addProduct(values),
   });
 
   const getAllCategory = async () => {
@@ -87,9 +87,11 @@ const Products = () => {
     if (status > 199 && status < 299) {
       setInitialState((prev: InitialInventoryState) => ({
         ...prev,
+        categorySelected: "",
         categoryList: body.categories,
       }));
       getAllProduct();
+      resetCategoryModes();
     } else {
       toast.error(body.message);
     }
@@ -127,8 +129,13 @@ const Products = () => {
         ...prev,
         editProduct: false,
         viewProduct: true,
+        productSelected: id,
       }));
       productFormik.setValues(body.product);
+      productFormik.setFieldValue(
+        "stockDate",
+        moment(body.product.stockDate).format("YYYY-MM-DD")
+      );
       console.log(body.product);
     } else {
       toast.error(body.message);
@@ -145,8 +152,8 @@ const Products = () => {
         productList: body.productList,
         editProduct: false,
         viewProduct: false,
+        categorySelected: id,
       }));
-      productFormik.setValues(body.product);
     } else {
       toast.error(body.message);
     }
@@ -158,6 +165,7 @@ const Products = () => {
         ...prev,
         editCategory: false,
         newCategory: false,
+        deleteModal: initialDeleteState,
       }));
       toast.success(body.message);
       getAllCategory();
@@ -166,14 +174,16 @@ const Products = () => {
     }
   };
   const deleteProductById = async (id: string) => {
-    const { status, body } = await deleteCategoryByIdApi(id);
+    const { status, body } = await deleteProductByIdApi(id);
     if (status > 199 && status < 299) {
       setInitialState((prev: InitialInventoryState) => ({
         ...prev,
         editCategory: false,
         newCategory: false,
+        deleteModal: initialDeleteState,
       }));
       toast.success(body.message);
+      productFormik.resetForm();
       getAllCategory();
     } else {
       toast.error(body.message);
@@ -214,17 +224,25 @@ const Products = () => {
       categoryId: payload.newCategory ? "" : payload.categoryId,
     };
     const { status, body } = await addProductAPI(values);
-    if (status > 199 && status < 299) {
+    if (status === 200) {
       toast.success(body.message);
-      setInitialState((prev: InitialInventoryState) => ({
-        ...prev,
-        editProduct: false,
-        viewProduct: false,
-      }));
-      getAllCategory();
-      getAllProduct();
+      await getAllCategory();
+      await getProductByCategoryApi(body.product.categoryId);
+      productFormik.resetForm();
     } else {
       toast.error(body.message);
+    }
+  };
+
+  const updateProduct = async (payload: any) => {
+    const { status, body } = await updateProductAPI(
+      payload,
+      initialState.productSelected
+    );
+    if (status > 199 && status < 299) {
+      toast.success(body.message);
+      await getAllCategory();
+      await getProductByCategoryApi(body.product.categoryId);
     }
   };
 
@@ -239,16 +257,9 @@ const Products = () => {
       editProduct: false,
       viewProduct: false,
       newCategory: false,
-      categorySelected: "",
     }));
     categoryFormik.resetForm();
   };
-
-  useEffect(() => {
-    if (initialState.newCategory === false) {
-      resetCategoryModes();
-    }
-  }, [initialState.newCategory]);
 
   const deleteFunction = () => {
     if (initialState.deleteModal.deleteId) {
@@ -271,79 +282,86 @@ const Products = () => {
         <div>
           <section aria-labelledby="products-heading" className="pb-24">
             <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4 ">
-              <FormikProvider value={categoryFormik}>
-                <form onSubmit={categoryFormik.handleSubmit}>
-                  <div className="flex justify-between items-center">
-                    <p className="text-2xl mb-3">Categories</p>
-                    {initialState.newCategory ? (
-                      <CloseIcon
-                        className="w-6 h-6 cursor-pointer"
-                        onClick={(e: any) => {
-                          e.preventDefault();
-                          setInitialState((prev: InitialInventoryState) => ({
-                            ...prev,
-                            newCategory: false,
-                          }));
-                        }}
-                      />
-                    ) : (
-                      <AddIcon
-                        className="w-6 h-6 cursor-pointer"
-                        onClick={(e: any) => {
-                          e.preventDefault();
-                          setInitialState((prev: InitialInventoryState) => ({
-                            ...prev,
-                            newCategory: true,
-                          }));
-                        }}
-                      />
-                    )}
-                  </div>
-                  <ul
-                    role="list"
-                    className="space-y-4 border-b pb-6 text-sm font-medium text-gray-900"
-                  >
-                    <CreateCategory
-                      initialState={initialState}
-                      formik={categoryFormik}
-                      deleteCategoryById={deleteCategoryById}
-                    />
-                    {initialState.categoryList?.length ? (
-                      <>
-                        <CategoryCard
-                          key={`All Category`}
-                          category={"All Category"}
-                          productCount={initialState.totalproducts}
-                          onClick={() => getAllCategory()}
+              <div className="hidden lg:block">
+                <FormikProvider value={categoryFormik}>
+                  <form onSubmit={categoryFormik.handleSubmit}>
+                    <div className="flex justify-between items-center">
+                      <p className="text-2xl mb-3">Categories</p>
+                      {initialState.newCategory ? (
+                        <CloseIcon
+                          className="w-6 h-6 cursor-pointer"
+                          onClick={(e: any) => {
+                            e.preventDefault();
+                            setInitialState((prev: InitialInventoryState) => ({
+                              ...prev,
+                              newCategory: false,
+                            }));
+                          }}
                         />
+                      ) : (
+                        <AddIcon
+                          className="w-6 h-6 cursor-pointer"
+                          onClick={(e: any) => {
+                            e.preventDefault();
+                            setInitialState((prev: InitialInventoryState) => ({
+                              ...prev,
+                              newCategory: true,
+                            }));
+                          }}
+                        />
+                      )}
+                    </div>
+                    <ul
+                      role="list"
+                      className="space-y-4 border-b pb-6 text-sm font-medium text-gray-900"
+                    >
+                      <CreateCategory
+                        initialState={initialState}
+                        formik={categoryFormik}
+                        deleteCategoryById={deleteCategoryById}
+                      />
+                      {initialState.categoryList?.length > 1 ? (
+                        <>
+                          <CategoryCard
+                            key={`All Category`}
+                            category={"All Category"}
+                            productCount={initialState.totalproducts}
+                            onClick={() => getAllCategory()}
+                            id={""}
+                            categorySelected={initialState.categorySelected}
+                          />
 
-                        {initialState.categoryList?.map(
-                          (item: any, index: number) => (
-                            <CategoryCard
-                              key={`${item.category}-${index}`}
-                              category={item?.categoryName}
-                              productCount={item?.productsCount}
-                              onClick={() => getProductByCategory(item.id)}
-                              onEditClick={() => getCategoryById(item.id)}
-                              onDeleteClick={() =>
-                                setInitialState(
-                                  (prev: InitialInventoryState) => ({
-                                    ...prev,
-                                    deleteModal: {
-                                      deleteId: item.id,
-                                      deleteType: ToDelete.CATEGORY,
-                                    },
-                                  })
-                                )
-                              }
-                            />
-                          )
-                        )}
-                      </>
-                    ) : null}
-                  </ul>
-                </form>
-              </FormikProvider>
+                          {initialState.categoryList?.map(
+                            (item: any, index: number) => (
+                              <CategoryCard
+                                key={`${item.category}-${index}`}
+                                id={item.id}
+                                categorySelected={initialState.categorySelected}
+                                category={item?.categoryName}
+                                productCount={item?.productsCount}
+                                onClick={() => getProductByCategory(item.id)}
+                                onEditClick={() => getCategoryById(item.id)}
+                                onDeleteClick={() =>
+                                  setInitialState(
+                                    (prev: InitialInventoryState) => ({
+                                      ...prev,
+                                      categorySelected: item.id,
+                                      deleteModal: {
+                                        deleteId: item.id,
+                                        deleteType: ToDelete.CATEGORY,
+                                      },
+                                    })
+                                  )
+                                }
+                              />
+                            )
+                          )}
+                        </>
+                      ) : null}
+                    </ul>
+                  </form>
+                </FormikProvider>
+              </div>
 
               {/* Product grid */}
               <div className="lg:col-span-3">
@@ -369,6 +387,7 @@ const Products = () => {
                           {initialState.productList.length
                             ? initialState.productList?.map((item: any) => (
                                 <ProductCard
+                                  key={`${item.id}`}
                                   product={item}
                                   categoryName={
                                     initialState.categoryList?.find(
@@ -383,7 +402,7 @@ const Products = () => {
                       </>
                     ) : (
                       <>
-                        <div className="flex justify-between mt-3">
+                        <div className="flex justify-between">
                           <ArrowIcon
                             direction={"Left"}
                             onClick={() => {
@@ -392,29 +411,50 @@ const Products = () => {
                                   ...prev,
                                   editProduct: false,
                                   viewProduct: false,
+                                  productSelected: "",
                                 })
                               );
                               productFormik.resetForm();
                             }}
                           />
-                          <PrimaryButton
-                            text={initialState.editProduct ? "Cancel" : "Edit"}
-                            onClick={() =>
-                              setInitialState((prev: InitialInventoryState) =>
-                                initialState.editProduct
-                                  ? {
+                          <div className="flex justify-between gap-3">
+                            {initialState.productSelected && (
+                              <DeleteButton
+                                text={"Delete"}
+                                onClick={() =>
+                                  setInitialState(
+                                    (prev: InitialInventoryState) => ({
                                       ...prev,
-                                      editProduct: !prev.editProduct,
-                                      viewProduct: !prev.viewProduct,
-                                    }
-                                  : {
-                                      ...prev,
-                                      editProduct: true,
-                                      viewProduct: false,
-                                    }
-                              )
-                            }
-                          />
+                                      deleteModal: {
+                                        deleteId: initialState.productSelected,
+                                        deleteType: ToDelete.PRODUCT,
+                                      },
+                                    })
+                                  )
+                                }
+                              />
+                            )}
+                            <PrimaryButton
+                              text={
+                                initialState.editProduct ? "Cancel" : "Edit"
+                              }
+                              onClick={() =>
+                                setInitialState((prev: InitialInventoryState) =>
+                                  initialState.editProduct
+                                    ? {
+                                        ...prev,
+                                        editProduct: !prev.editProduct,
+                                        viewProduct: !prev.viewProduct,
+                                      }
+                                    : {
+                                        ...prev,
+                                        editProduct: true,
+                                        viewProduct: false,
+                                      }
+                                )
+                              }
+                            />
+                          </div>
                         </div>
                         <FormikProvider value={productFormik}>
                           <form onSubmit={productFormik.handleSubmit}>
@@ -445,6 +485,7 @@ const Products = () => {
       </div>
       <ConfirmationModal
         show={initialState.deleteModal.deleteId ? true : false}
+        text={initialState.deleteModal.deleteType.toLowerCase()}
         setShow={() =>
           setInitialState((prev: InitialInventoryState) => ({
             ...prev,
