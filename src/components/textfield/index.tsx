@@ -38,7 +38,7 @@ const TextField = ({
                   // autoFocus="true"
                   autoComplete="false"
                   placeholder={placeholder}
-                  className={`mt-2 block w-full rounded-md border-0 py-2 px-3 ${
+                  className={`mt-2 block w-full rounded-md border-1 py-2 px-3 ${
                     meta.touched && meta.error && "ring-red-600"
                   } text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-100 sm:text-sm sm:leading-6 `}
                 />
@@ -63,7 +63,7 @@ const TextField = ({
                   rows={5}
                   autoComplete="false"
                   placeholder={placeholder}
-                  className={`mt-2 block w-full rounded-md border-0 py-2 px-3 ${
+                  className={`mt-2 block w-full rounded-md border-1 py-2 px-3 ${
                     meta.touched && meta.error && "ring-red-600"
                   } text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-100 sm:text-sm sm:leading-6 `}
                 />
