@@ -390,7 +390,7 @@ const Products = () => {
                   <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
                     {!initialState.viewProduct && !initialState.editProduct ? (
                       <>
-                        <div className="flex justify-end sm:justify-between items-center mt-1 sm:gap-2">
+                        <div className="flex justify-between md:justify-end items-center mt-1 sm:gap-2">
                           <PrimaryButton
                             text={"Add Product"}
                             onClick={() =>

@@ -66,6 +66,7 @@ const AuthProvider = ({ children }: any) => {
         companyInfoAvailable: body.profileCompleted,
         organizationLogo: body.organizationLogo,
       }));
+      if (!body.profileCompleted) router.push("/organization-info");
     }
   };
 
@@ -73,7 +74,7 @@ const AuthProvider = ({ children }: any) => {
     const hasAccess = Cookie.get("token"); // the name used to store the user’s token in localstorage
     if (hasAccess) {
       getUserDetails();
-    }
+    } else router.push("/");
     getCountryList();
   }, []);
 

@@ -1,7 +1,9 @@
 const baseUrls = {
+  // auth: "https://storied-sherbet-91e627.netlify.app",
   auth: "https://inventory-auth.onrender.com",
   // auth: "http://localhost:3001",
   // inventory: "http://localhost:3002",
+  // inventory: "https://willowy-longma-6ae338.netlify.app",
   inventory: "https://inventory-products.onrender.com",
 };
 

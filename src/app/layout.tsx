@@ -3,7 +3,6 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { AuthProvider } from "../utils/context/AuthContext";
 import { Toaster } from "react-hot-toast";
-import CheckAuth from "@/utils/checkAuth";
 
 export const metadata: Metadata = {
   title: "Inventory",
@@ -20,9 +19,7 @@ export default function RootLayout({
       <body className="bg-white">
         <AuthProvider>
           <PrimaryNavbar />
-          <CheckAuth>
-            <main>{children}</main>
-          </CheckAuth>
+          <main>{children}</main>
           <Toaster />
         </AuthProvider>
       </body>
