@@ -62,7 +62,7 @@ const Products = () => {
     editProduct: false,
     viewProduct: false,
     deleteModal: initialDeleteState,
-    categoryDrawer: true,
+    categoryDrawer: false,
   });
 
   const categoryFormik = useFormik({

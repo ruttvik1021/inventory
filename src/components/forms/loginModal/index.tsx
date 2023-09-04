@@ -10,7 +10,7 @@ import LoginForm from "./loginForm";
 import Modal from "@/components/modalTemplate/Modal";
 import useAuth from "@/utils/context/useAuth";
 import { useRouter } from "next/navigation";
-import { getCurrentUserApi } from "@/_api/auth";
+import { getCurrentUserApi } from "@/_api/signin";
 import toast from "react-hot-toast";
 
 interface IModal {

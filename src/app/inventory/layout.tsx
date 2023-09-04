@@ -1,4 +1,6 @@
 import InventoryNavbar from "@/components/inventory/inventoryNavbar";
+import CheckAuth from "@/utils/checkAuth";
+import { useEffect } from "react";
 
 export default function RootLayout({
   children,

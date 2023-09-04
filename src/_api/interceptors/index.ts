@@ -3,10 +3,10 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { baseUrls } from "../_urls";
 
-// const handleLogout = () => {
-//   Cookies.remove("token");
-//   window.location.href = "/#/login";
-// };
+const handleLogout = () => {
+  Cookies.remove("token");
+  window.location.href = "/";
+};
 
 const gettingBaseUrl = (module: IModules) => {
   if (module === IModules.AUTH) {
@@ -46,7 +46,7 @@ const settingBaseUrl = (module: IModules) => {
     },
     (error) => {
       if (!error.response || error.response.status === 401) {
-        // handleLogout();
+        handleLogout();
       } else {
         return Promise.reject(error);
       }

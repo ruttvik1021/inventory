@@ -1,5 +1,5 @@
 "use client";
-import { getCurrentUserApi } from "@/_api/auth";
+import { getCurrentUserApi } from "@/_api/signin";
 import { getCountryListApi } from "@/_api/unauthAPIs";
 import Cookie from "js-cookie";
 import { useRouter } from "next/navigation";

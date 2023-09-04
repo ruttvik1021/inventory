@@ -1,5 +1,7 @@
 const baseUrls = {
   auth: "https://inventory-auth.onrender.com",
+  // auth: "http://localhost:3001",
+  // inventory: "http://localhost:3002",
   inventory: "https://inventory-products.onrender.com",
 };
 

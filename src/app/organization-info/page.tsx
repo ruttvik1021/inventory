@@ -3,7 +3,7 @@ import {
   getAllIndustriesListAPI,
   getCurrentUserApi,
   updateOrgInfoAPI,
-} from "@/_api/auth";
+} from "@/_api/signin";
 import {
   IOrganizationInformation,
   OrganizationInitialValues,
