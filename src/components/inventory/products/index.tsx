@@ -369,7 +369,7 @@ const Products = () => {
                   <div className="mx-auto max-w-2xl px-4 sm:px-6  lg:max-w-7xl lg:px-8">
                     {!initialState.viewProduct && !initialState.editProduct ? (
                       <>
-                        <div className="flex justify-end">
+                        <div className="flex justify-end items-center mt-1">
                           <PrimaryButton
                             text={"Add Product"}
                             onClick={() =>
@@ -402,7 +402,7 @@ const Products = () => {
                       </>
                     ) : (
                       <>
-                        <div className="flex justify-between">
+                        <div className="flex justify-between items-center mt-1">
                           <ArrowIcon
                             direction={"Left"}
                             onClick={() => {

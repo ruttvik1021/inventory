@@ -2,7 +2,7 @@ import PrimaryNavbar from "@/components/primaryNavbar";
 import "./globals.css";
 import type { Metadata } from "next";
 import { AuthProvider } from "../utils/context/AuthContext";
-import { ProtectedRoutes } from "@/utils/context/protectedRoutes";
+// import { ProtectedRoutes } from "@/utils/context/protectedRoutes";
 import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
@@ -19,11 +19,11 @@ export default function RootLayout({
     <html lang="en">
       <body className="bg-white">
         <AuthProvider>
-          <ProtectedRoutes>
-            <PrimaryNavbar />
-            <main>{children}</main>
-            <Toaster />
-          </ProtectedRoutes>
+          {/* <ProtectedRoutes> */}
+          <PrimaryNavbar />
+          <main>{children}</main>
+          <Toaster />
+          {/* </ProtectedRoutes> */}
         </AuthProvider>
       </body>
     </html>
