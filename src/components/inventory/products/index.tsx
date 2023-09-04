@@ -70,7 +70,7 @@ const Products = () => {
     validationSchema: Yup.object({
       categoryName: Yup.string().required("Required"),
     }),
-    onSubmit: (values) =>
+    onSubmit: (values: any) =>
       initialState.editCategory
         ? updateCategoryById(values)
         : createCat(values),
@@ -78,7 +78,7 @@ const Products = () => {
   const productFormik = useFormik({
     initialValues: ProductInitialValues,
     validationSchema: ProductYup,
-    onSubmit: (values) =>
+    onSubmit: (values: any) =>
       initialState.productSelected ? updateProduct(values) : addProduct(values),
   });
 

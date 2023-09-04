@@ -1,4 +1,3 @@
-import React from "react";
 type IDirection = "Left" | "Right" | "Up" | "Down";
 
 interface IProps {

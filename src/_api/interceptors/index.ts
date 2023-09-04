@@ -3,10 +3,10 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { baseUrls } from "../_urls";
 
-const handleLogout = () => {
-  Cookies.remove("token");
-  window.location.href = "/#/login";
-};
+// const handleLogout = () => {
+//   Cookies.remove("token");
+//   window.location.href = "/#/login";
+// };
 
 const gettingBaseUrl = (module: IModules) => {
   if (module === IModules.AUTH) {

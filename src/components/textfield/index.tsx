@@ -1,4 +1,3 @@
-import React from "react";
 import { Formik, Field, ErrorMessage } from "formik";
 
 const textAreaMax = 255;

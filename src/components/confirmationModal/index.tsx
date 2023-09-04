@@ -1,4 +1,3 @@
-import React from "react";
 import Modal from "../modalTemplate/Modal";
 import DeleteButton from "../deleteButton";
 import PrimaryButton from "../primaryButton";

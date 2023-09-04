@@ -1,5 +1,3 @@
-import React from "react";
-
 const CategoryList = () => {
   const people = [
     {
@@ -15,7 +13,7 @@ const CategoryList = () => {
   return (
     <>
       <ul role="list" className="divide-y divide-gray-100">
-        {people.map((person) => (
+        {people.map((person: any) => (
           <li key={person.email} className="flex justify-between gap-x-6 py-5">
             <div className="flex min-w-0 gap-x-4">
               <img

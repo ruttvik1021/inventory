@@ -17,14 +17,14 @@ export const navRoutes = [
     label: "Inventory",
     href: "/inventory/insights",
   },
-  {
-    label: "Finance",
-    href: "/finance/insights",
-  },
-  {
-    label: "Credit",
-    href: "/credit/insights",
-  },
+  // {
+  //   label: "Finance",
+  //   href: "/finance/insights",
+  // },
+  // {
+  //   label: "Credit",
+  //   href: "/credit/insights",
+  // },
 ];
 
 export const inventorySubRoutes = [

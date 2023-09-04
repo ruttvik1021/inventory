@@ -1,5 +1,3 @@
-import React from "react";
-
 interface IProductCard {
   id: string;
   images?: string;

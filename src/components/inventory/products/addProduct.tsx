@@ -1,5 +1,4 @@
 import Drawer from "@/components/drawer";
-import React from "react";
 
 const AddProduct = ({ productFormik, editProduct, closeDrawer }: any) => {
   console.log("productFormik", productFormik.values);
