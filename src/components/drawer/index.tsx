@@ -6,14 +6,16 @@ const Drawer = ({
   children,
   show,
   setShow,
+  title,
 }: {
   children: React.ReactNode;
   show: boolean;
-  setShow: (state: boolean) => void;
+  setShow: any;
+  title?: string;
 }) => {
   return (
     <Transition.Root show={show} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={() => setShow(false)}>
+      <Dialog as="div" className="relative z-10" onClose={setShow}>
         <Transition.Child
           as={Fragment}
           enter="ease-in-out duration-500"
@@ -52,7 +54,7 @@ const Drawer = ({
                       <button
                         type="button"
                         className="relative rounded-md text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
-                        onClick={() => setShow(false)}
+                        onClick={setShow}
                       >
                         <span className="absolute -inset-2.5" />
                         <span className="sr-only">Close panel</span>
@@ -62,9 +64,11 @@ const Drawer = ({
                   </Transition.Child>
                   <div className="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
                     <div className="px-4 sm:px-6">
-                      <Dialog.Title className="text-base font-semibold leading-6 text-gray-900">
-                        Panel title
-                      </Dialog.Title>
+                      {title && (
+                        <Dialog.Title className="text-base font-semibold leading-6 text-gray-900">
+                          {title}
+                        </Dialog.Title>
+                      )}
                     </div>
                     <div className="relative mt-6 flex-1 px-4 sm:px-6">
                       {children}

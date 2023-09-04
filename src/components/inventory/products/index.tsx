@@ -33,13 +33,14 @@ import PrimaryButton from "@/components/primaryButton";
 import ArrowIcon from "@/utils/images/icons/arrowIcon";
 import moment from "moment";
 import DeleteButton from "@/components/deleteButton";
+import CategoryDrawer from "./categoryDrawer";
+
+export const ToDelete = {
+  CATEGORY: "CATEGORY",
+  PRODUCT: "PRODUCT",
+};
 
 const Products = () => {
-  const ToDelete = {
-    CATEGORY: "CATEGORY",
-    PRODUCT: "PRODUCT",
-  };
-
   const initialDeleteState = {
     deleteId: null,
     deleteType: "",
@@ -61,6 +62,7 @@ const Products = () => {
     editProduct: false,
     viewProduct: false,
     deleteModal: initialDeleteState,
+    categoryDrawer: true,
   });
 
   const categoryFormik = useFormik({
@@ -281,7 +283,26 @@ const Products = () => {
       <div className="bg-white">
         <div>
           <section aria-labelledby="products-heading" className="pb-24">
-            <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4 ">
+            <div className="grid grid-cols-1 gap-x-8 gap-y-10 sm:gap-y-2 lg:grid-cols-4 ">
+              <div className="lg:hidden md:hidden xl:hidden">
+                <CategoryDrawer
+                  show={initialState.categoryDrawer}
+                  setShow={() =>
+                    setInitialState((prev: InitialInventoryState) => ({
+                      ...prev,
+                      categoryDrawer: false,
+                    }))
+                  }
+                  formik={categoryFormik}
+                  initialState={initialState}
+                  setInitialState={setInitialState}
+                  deleteCategoryById={deleteCategoryById}
+                  getAllCategory={getAllCategory}
+                  getCategoryById={getCategoryById}
+                  getProductByCategory={getProductByCategory}
+                  title={"Categories"}
+                ></CategoryDrawer>
+              </div>
               <div className="hidden lg:block">
                 <FormikProvider value={categoryFormik}>
                   <form onSubmit={categoryFormik.handleSubmit}>
@@ -366,10 +387,10 @@ const Products = () => {
               {/* Product grid */}
               <div className="lg:col-span-3">
                 <div className="bg-white">
-                  <div className="mx-auto max-w-2xl px-4 sm:px-6  lg:max-w-7xl lg:px-8">
+                  <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
                     {!initialState.viewProduct && !initialState.editProduct ? (
                       <>
-                        <div className="flex justify-end items-center mt-1">
+                        <div className="flex justify-end sm:justify-between items-center mt-1 sm:gap-2">
                           <PrimaryButton
                             text={"Add Product"}
                             onClick={() =>
@@ -382,8 +403,20 @@ const Products = () => {
                               )
                             }
                           />
+                          <PrimaryButton
+                            text={"Categories"}
+                            className="lg:hidden"
+                            onClick={() =>
+                              setInitialState(
+                                (prev: InitialInventoryState) => ({
+                                  ...prev,
+                                  categoryDrawer: true,
+                                })
+                              )
+                            }
+                          />
                         </div>
-                        <div className="mt-2 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+                        <div className="mt-2 grid grid-cols-1 gap-x-6 gap-y-10 sm:gap-y-1 sm:grid-cols-4 lg:grid-cols-4 xl:gap-x-8">
                           {initialState.productList.length
                             ? initialState.productList?.map((item: any) => (
                                 <ProductCard

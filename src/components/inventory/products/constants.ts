@@ -21,6 +21,7 @@ export interface InitialInventoryState {
   totalproducts: number;
   editProduct: boolean;
   viewProduct: boolean;
+  categoryDrawer: boolean;
   deleteModal: {
     deleteId: null | string;
     deleteType: string;
