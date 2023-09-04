@@ -7,7 +7,7 @@ import Cookies from "js-cookie";
 const CheckAuth = ({ children }: any) => {
   const { initialAuthState } = useAuth();
   const router = useRouter();
-  const token = Cookies.get("token");
+  const token = Cookies.get("token") || null;
 
   useEffect(() => {
     if (!initialAuthState.isAuthenticated || !token) router.push("/");
@@ -17,7 +17,7 @@ const CheckAuth = ({ children }: any) => {
       initialAuthState.companyInfoAvailable
     )
       router.push("/organization-info");
-  }, []);
+  }, [token]);
 
   return <>{children}</>;
 };
