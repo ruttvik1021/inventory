@@ -12,12 +12,12 @@ import NavDropDown from "../navbarDropdown";
 import { useRouter } from "next/navigation";
 import Toggle from "../toggle";
 import { styleConfig } from "@/utils/styling/styleConfig";
-import Cookies from "js-cookie"
+import Cookies from "js-cookie";
 
 const PrimaryNavbar = () => {
   const router = useRouter();
   const { initialAuthState, logoutUser, darkTheme, setDarkTheme } = useAuth();
-  const token = Cookies.get("token") || null
+  const token = Cookies.get("token") || null;
   const [modalShow, setModalShow] = useState<boolean>(false);
 
   const signOutOption = { label: "Sign Out", onClick: () => logoutUser() };
@@ -53,7 +53,6 @@ const PrimaryNavbar = () => {
           <ul className="xl:flex lg:flex md:flex hidden text-lg font-medium gap-7 justify-center items-center">
             {/* <Toggle enabled={darkTheme} setEnabled={setDarkTheme} /> */}
             {token &&
-              initialAuthState.companyInfoAvailable &&
               navRoutes.map(({ label, href }: any, index: number) => (
                 <NavLinks
                   label={label}

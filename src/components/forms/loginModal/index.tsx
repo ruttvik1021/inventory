@@ -43,7 +43,7 @@ const LoginModal = ({ show, setShow, onBlur }: IModal) => {
       });
       setShow(false);
       toast.success("Login Successful");
-      loginUser(body?.token || null);
+      loginUser(body || null);
     } else {
       toast.error(body?.message ? body?.message : "Something went wrong");
     }

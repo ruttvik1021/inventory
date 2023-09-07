@@ -7,7 +7,7 @@ import { createContext, useEffect, useState } from "react";
 
 interface IAuthContext {
   initialAuthState: IInitialAuthState;
-  loginUser: (token: string) => void;
+  loginUser: (response: any) => void;
   logoutUser: () => void;
   setInitialAuthState: (prev: IInitialAuthState) => void;
   darkTheme: boolean;
@@ -20,7 +20,7 @@ const AuthContext = createContext<IAuthContext>({
     companyInfoAvailable: false,
     organizationLogo: "",
   },
-  loginUser: (token: string) => {}, // Provide a dummy implementation or leave it undefined
+  loginUser: (response: any) => {}, // Provide a dummy implementation or leave it undefined
   logoutUser: () => {}, // Provide a dummy implementation or leave it undefined
   setInitialAuthState: (prev: IInitialAuthState) => {},
   darkTheme: false,
@@ -66,7 +66,6 @@ const AuthProvider = ({ children }: any) => {
         companyInfoAvailable: body.profileCompleted,
         organizationLogo: body.organizationLogo,
       }));
-      if (!body.profileCompleted) router.push("/organization-info");
     }
   };
 
@@ -78,8 +77,8 @@ const AuthProvider = ({ children }: any) => {
     getCountryList();
   }, []);
 
-  const loginUser = (token: any) => {
-    Cookie.set("token", token, {
+  const loginUser = (body: any) => {
+    Cookie.set("token", body?.token, {
       expires: 12,
       secure: true,
       sameSite: "strict",
@@ -88,6 +87,7 @@ const AuthProvider = ({ children }: any) => {
       ...prev,
       isAuthenticated: true,
     }));
+    if (!body.companyInfo) router.push("/organization-info");
   };
 
   const logoutUser = () => {
