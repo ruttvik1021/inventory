@@ -284,28 +284,31 @@ const Products = () => {
         <div>
           <section aria-labelledby="products-heading" className="pb-24">
             <div className="grid grid-cols-1 gap-x-8 gap-y-10 sm:gap-y-2 lg:grid-cols-4 ">
-              <div className="lg:hidden md:hidden xl:hidden">
-                <CategoryDrawer
-                  show={initialState.categoryDrawer}
-                  setShow={() =>
-                    setInitialState((prev: InitialInventoryState) => ({
-                      ...prev,
-                      categoryDrawer: false,
-                    }))
-                  }
-                  formik={categoryFormik}
-                  initialState={initialState}
-                  setInitialState={setInitialState}
-                  deleteCategoryById={deleteCategoryById}
-                  getAllCategory={getAllCategory}
-                  getCategoryById={getCategoryById}
-                  getProductByCategory={getProductByCategory}
-                  title={"Categories"}
-                ></CategoryDrawer>
-              </div>
-              <div className="hidden lg:block">
+              <CategoryDrawer
+                show={initialState.categoryDrawer}
+                setShow={() =>
+                  setInitialState((prev: InitialInventoryState) => ({
+                    ...prev,
+                    categoryDrawer: false,
+                  }))
+                }
+                formik={categoryFormik}
+                initialState={initialState}
+                setInitialState={setInitialState}
+                deleteCategoryById={deleteCategoryById}
+                getAllCategory={getAllCategory}
+                getCategoryById={getCategoryById}
+                getProductByCategory={getProductByCategory}
+                title={"Categories"}
+              />
+              <div className="hidden lg:block bg-gray-100 p-2 rounded-lg">
                 <FormikProvider value={categoryFormik}>
-                  <form onSubmit={categoryFormik.handleSubmit}>
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      categoryFormik.handleSubmit();
+                    }}
+                  >
                     <div className="flex justify-between items-center">
                       <p className="text-2xl mb-3">Categories</p>
                       {initialState.newCategory ? (

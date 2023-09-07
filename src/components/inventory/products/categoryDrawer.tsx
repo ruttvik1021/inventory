@@ -21,9 +21,14 @@ const CategoryDrawer = ({
   title,
 }: any) => {
   return (
-    <Drawer show={show} setShow={setShow} title={title}>
+    <Drawer show={show} setShow={setShow}>
       <FormikProvider value={formik}>
-        <form onSubmit={formik.handleSubmit}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            formik.handleSubmit();
+          }}
+        >
           <div className="flex justify-between items-center">
             <p className="text-2xl mb-3">Categories</p>
             {initialState.newCategory ? (

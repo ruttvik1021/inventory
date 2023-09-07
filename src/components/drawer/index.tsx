@@ -30,7 +30,7 @@ const Drawer = ({
 
         <div className="fixed inset-0 overflow-hidden">
           <div className="absolute inset-0 overflow-hidden">
-            <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+            <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 my-1">
               <Transition.Child
                 as={Fragment}
                 enter="transform transition ease-in-out duration-500 sm:duration-700"
@@ -40,20 +40,21 @@ const Drawer = ({
                 leaveFrom="translate-x-0"
                 leaveTo="translate-x-full"
               >
-                <Dialog.Panel className="pointer-events-auto relative w-screen max-w-md">
-                  <Transition.Child
-                    as={Fragment}
-                    enter="ease-in-out duration-500"
-                    enterFrom="opacity-0"
-                    enterTo="opacity-100"
-                    leave="ease-in-out duration-500"
-                    leaveFrom="opacity-100"
-                    leaveTo="opacity-0"
-                  >
-                    <div className="absolute left-0 top-0 -ml-8 flex pr-2 pt-4 sm:-ml-10 sm:pr-4">
+                <Dialog.Panel className="pointer-events-auto relative w-screen max-w-md ">
+                  <div className="flex h-full flex-col overflow-y-scroll bg-gray-100 py-1 shadow-xl rounded-xl">
+                    <div
+                      className={`flex px-1 sm:px-1 border-b pb-2 ${
+                        title ? "justify-between" : "justify-end"
+                      }`}
+                    >
+                      {title && (
+                        <Dialog.Title className="text-base font-semibold leading-6 text-gray-900">
+                          {title}
+                        </Dialog.Title>
+                      )}
                       <button
                         type="button"
-                        className="relative rounded-md text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
+                        className="relative rounded-md text-red-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-red-500"
                         onClick={setShow}
                       >
                         <span className="absolute -inset-2.5" />
@@ -61,16 +62,8 @@ const Drawer = ({
                         <XMarkIcon className="h-6 w-6" aria-hidden="true" />
                       </button>
                     </div>
-                  </Transition.Child>
-                  <div className="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
-                    <div className="px-4 sm:px-6">
-                      {title && (
-                        <Dialog.Title className="text-base font-semibold leading-6 text-gray-900">
-                          {title}
-                        </Dialog.Title>
-                      )}
-                    </div>
-                    <div className="relative mt-6 flex-1 px-4 sm:px-6">
+
+                    <div className="relative flex-1 px-2 sm:px-1 ">
                       {children}
                     </div>
                   </div>
