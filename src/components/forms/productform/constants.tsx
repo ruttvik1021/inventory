@@ -37,15 +37,16 @@ export const ProductInitialValues: IProduct = {
 export const ProductYup = Yup.object({
   productName: Yup.string().required("Required"),
   categoryId: Yup.string().required("Required"),
-  price: Yup.number().typeError("Must be a Number"),
-  discount: Yup.number().typeError("Must be a Number"),
-  purchasePrice: Yup.number().typeError("Must be a Number"),
-  openingStock: Yup.number().typeError("Must be a Number"),
-  lowQuantity: Yup.number().typeError("Must be a Number"),
-  discountType: Yup.string().oneOf([
-    DiscountType.AMOUNT,
-    DiscountType.PERCENTAGE,
-  ]),
+  price: Yup.number().typeError("Must be a Number").required("Required"),
+  discount: Yup.number().typeError("Must be a Number").required("Required"),
+  purchasePrice: Yup.number()
+    .typeError("Must be a Number")
+    .required("Required"),
+  openingStock: Yup.number().typeError("Must be a Number").required("Required"),
+  lowQuantity: Yup.number().typeError("Must be a Number").required("Required"),
+  discountType: Yup.string()
+    .oneOf([DiscountType.AMOUNT, DiscountType.PERCENTAGE])
+    .required("Required"),
   notifyWhenLow: Yup.boolean(),
   stockDate: Yup.string().required("Required"),
   newCategory: Yup.boolean(),
