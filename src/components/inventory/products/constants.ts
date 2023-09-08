@@ -17,6 +17,9 @@ export interface InitialInventoryState {
     productName: string;
     categoryId: string;
     id: string;
+    openingStock: number;
+    currentStock: number;
+    lowStock: number;
   }[];
   totalproducts: number;
   editProduct: boolean;
