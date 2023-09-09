@@ -1,4 +1,6 @@
-import Image from "next/image";
+import PrimaryButton from "@/components/primaryButton";
+import DeleteIcon from "@/utils/images/icons/deleteIcon";
+import ViewIcon from "@/utils/images/icons/viewIcon";
 
 interface IProductCard {
   id: string;
@@ -13,19 +15,25 @@ interface IProps {
   product: IProductCard;
   onClick?: () => void;
   categoryName: string;
+  onDeleteClick?: any;
+  viewStocks?: any;
 }
 
-const ProductCard = ({ product, onClick, categoryName }: IProps) => {
-  const { id, productName, price, openingStock, currentStock, lowQuantity } =
-    product;
+const ProductCard = ({
+  product,
+  onClick,
+  categoryName,
+  onDeleteClick,
+  viewStocks,
+}: IProps) => {
+  const { productName, price, openingStock, currentStock } = product;
   return (
     <>
-      <div
-        key={id || ""}
-        className="group relative border-black border-2 rounded-md p-2 cursor-pointer bg-gray-200"
-        onClick={onClick}
-      >
-        <div className="flex-col items-baseline">
+      <div className="group relative border-black border-2 rounded-md p-2 bg-gray-200">
+        <div
+          className="flex-col items-baseline cursor-pointer"
+          onClick={onClick}
+        >
           <div className="mb-2">
             <p className="text-xl font-bold text-gray-700">{productName}</p>
             <p className="text-lg text-gray-700">{categoryName}</p>
@@ -41,6 +49,10 @@ const ProductCard = ({ product, onClick, categoryName }: IProps) => {
               <span className="font-normal">{currentStock || 0}</span>
             </p>
           </div>
+        </div>
+        <div className="flex justify-between items-center border-t-2 border-indigo-500 pt-2 mt-1">
+          <DeleteIcon onClick={onDeleteClick} />
+          <PrimaryButton onClick={viewStocks} text={"Stocks"} />
         </div>
       </div>
     </>

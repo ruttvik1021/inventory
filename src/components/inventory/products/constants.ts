@@ -29,4 +29,14 @@ export interface InitialInventoryState {
     deleteId: null | string;
     deleteType: string;
   };
+  stocksOfProduct: Array<any>;
+  stockDates: {
+    fromDate: string;
+    toDate: string;
+  };
+  stocksView: boolean;
+  stocksFilter: boolean;
+  currentStock: number;
+  inventoryUpdateType: "REMOVE" | "ADD";
+  inventoryQuantity: number;
 }

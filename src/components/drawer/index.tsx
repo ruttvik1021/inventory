@@ -41,7 +41,7 @@ const Drawer = ({
                 leaveTo="translate-x-full"
               >
                 <Dialog.Panel className="pointer-events-auto relative w-screen max-w-md ">
-                  <div className="flex h-full flex-col overflow-y-scroll bg-gray-100 py-1 shadow-xl rounded-xl">
+                  <div className="flex h-full flex-col overflow-y-scroll bg-white py-1 shadow-xl rounded-xl">
                     <div
                       className={`flex px-1 sm:px-1 border-b pb-2 ${
                         title ? "justify-between" : "justify-end"

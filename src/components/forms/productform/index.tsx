@@ -113,6 +113,7 @@ const ProductForm = ({ formik, close, initialState, editMode }: any) => {
             </div>
             <div className="sm:col-span-2">
               <Datepicker
+                type="Formik"
                 label={"As of Date"}
                 name={productFormKeys.stockDate}
                 disabled={!editMode}
@@ -163,8 +164,7 @@ const ProductForm = ({ formik, close, initialState, editMode }: any) => {
         </div>
       </div>
 
-      <div className="my-6 flex items-center justify-end gap-x-6">
-        {/* <PrimaryButton text={"Back"} onClick={() => router.back()} /> */}
+      {/* <div className="my-6 flex items-center justify-end gap-x-6">
         {editMode && (
           <PrimaryButton
             text={"Save"}
@@ -174,7 +174,7 @@ const ProductForm = ({ formik, close, initialState, editMode }: any) => {
             }}
           />
         )}
-      </div>
+      </div> */}
       <Modal
         show={enlarge ? true : false}
         setShow={() => setEnlarge(null)}

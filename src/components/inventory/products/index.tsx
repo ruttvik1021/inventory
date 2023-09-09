@@ -9,8 +9,10 @@ import {
   getCategoryByIdApi,
   getProductByCategoryApi,
   getProductByIdApi,
+  getStocksOfProductApi,
   updateCategoryByIdApi,
   updateProductAPI,
+  updateStockApi,
 } from "@/_api/inventory";
 import ProductForm from "@/components/forms/productform";
 import {
@@ -34,6 +36,10 @@ import ArrowIcon from "@/utils/images/icons/arrowIcon";
 import moment from "moment";
 import DeleteButton from "@/components/deleteButton";
 import CategoryDrawer from "./categoryDrawer";
+import Drawer from "@/components/drawer";
+import Datepicker from "@/components/datePicker";
+import FilterIcon from "@/utils/images/icons/filterIcon";
+import { RadioGroup } from "@headlessui/react";
 
 export const ToDelete = {
   CATEGORY: "CATEGORY",
@@ -63,6 +69,16 @@ const Products = () => {
     viewProduct: false,
     deleteModal: initialDeleteState,
     categoryDrawer: false,
+    stocksOfProduct: [],
+    stockDates: {
+      fromDate: moment().startOf("month").format("YYYY-MM-DD"),
+      toDate: moment().endOf("month").format("YYYY-MM-DD"),
+    },
+    stocksView: false,
+    stocksFilter: false,
+    currentStock: 0,
+    inventoryUpdateType: "REMOVE",
+    inventoryQuantity: 0,
   });
 
   const categoryFormik = useFormik({
@@ -138,7 +154,21 @@ const Products = () => {
         "stockDate",
         moment(body.product.stockDate).format("YYYY-MM-DD")
       );
-      console.log(body.product);
+    } else {
+      toast.error(body.message);
+    }
+  };
+  const getStocksOfProduct = async (id: string) => {
+    const { status, body } = await getStocksOfProductApi(
+      id,
+      initialState.stockDates
+    );
+    if (status > 199 && status < 299) {
+      setInitialState((prev: InitialInventoryState) => ({
+        ...prev,
+        stocksOfProduct: body.history,
+        stocksView: true,
+      }));
     } else {
       toast.error(body.message);
     }
@@ -245,6 +275,29 @@ const Products = () => {
       toast.success(body.message);
       await getAllCategory();
       await getProductByCategoryApi(body.product.categoryId);
+    }
+  };
+  const updateStock = async () => {
+    let payload = {};
+    if (initialState.inventoryUpdateType === "REMOVE") {
+      payload = {
+        quantityToRemove: initialState.inventoryQuantity,
+      };
+    } else {
+      payload = {
+        quantityToAdd: initialState.inventoryQuantity,
+      };
+    }
+    const { status, body } = await updateStockApi(
+      initialState.productSelected,
+      payload,
+      initialState.inventoryUpdateType
+    );
+    if (status > 199 && status < 299) {
+      getAllProduct();
+      getStocksOfProduct(initialState.productSelected);
+    } else {
+      toast.error(body.message);
     }
   };
 
@@ -431,6 +484,28 @@ const Products = () => {
                                     )?.categoryName || ""
                                   }
                                   onClick={() => getProductById(item.id)}
+                                  onDeleteClick={() =>
+                                    setInitialState(
+                                      (prev: InitialInventoryState) => ({
+                                        ...prev,
+                                        productSelected: item.id,
+                                        deleteModal: {
+                                          deleteId: item.id,
+                                          deleteType: ToDelete.PRODUCT,
+                                        },
+                                      })
+                                    )
+                                  }
+                                  viewStocks={() => {
+                                    getStocksOfProduct(item.id);
+                                    setInitialState(
+                                      (prev: InitialInventoryState) => ({
+                                        ...prev,
+                                        productSelected: item.id,
+                                        currentStock: item.currentStock,
+                                      })
+                                    );
+                                  }}
                                 />
                               ))
                             : "No Product to Show"}
@@ -438,62 +513,74 @@ const Products = () => {
                       </>
                     ) : (
                       <>
-                        <div className="flex justify-between items-center mt-1">
-                          <ArrowIcon
-                            direction={"Left"}
-                            onClick={() => {
-                              setInitialState(
-                                (prev: InitialInventoryState) => ({
-                                  ...prev,
-                                  editProduct: false,
-                                  viewProduct: false,
-                                  productSelected: "",
-                                })
-                              );
-                              productFormik.resetForm();
-                            }}
-                          />
-                          <div className="flex justify-between gap-3">
-                            {initialState.productSelected && (
-                              <DeleteButton
-                                text={"Delete"}
-                                onClick={() =>
+                        <FormikProvider value={productFormik}>
+                          <form onSubmit={productFormik.handleSubmit}>
+                            <div className="flex justify-between items-center mt-1">
+                              <ArrowIcon
+                                direction={"Left"}
+                                onClick={() => {
                                   setInitialState(
                                     (prev: InitialInventoryState) => ({
                                       ...prev,
-                                      deleteModal: {
-                                        deleteId: initialState.productSelected,
-                                        deleteType: ToDelete.PRODUCT,
-                                      },
+                                      editProduct: false,
+                                      viewProduct: false,
+                                      productSelected: "",
                                     })
-                                  )
-                                }
+                                  );
+                                  productFormik.resetForm();
+                                }}
                               />
-                            )}
-                            <PrimaryButton
-                              text={
-                                initialState.editProduct ? "Cancel" : "Edit"
-                              }
-                              onClick={() =>
-                                setInitialState((prev: InitialInventoryState) =>
-                                  initialState.editProduct
-                                    ? {
-                                        ...prev,
-                                        editProduct: !prev.editProduct,
-                                        viewProduct: !prev.viewProduct,
-                                      }
-                                    : {
-                                        ...prev,
-                                        editProduct: true,
-                                        viewProduct: false,
-                                      }
-                                )
-                              }
-                            />
-                          </div>
-                        </div>
-                        <FormikProvider value={productFormik}>
-                          <form onSubmit={productFormik.handleSubmit}>
+                              <div className="flex justify-between gap-3">
+                                {initialState.productSelected && (
+                                  <DeleteButton
+                                    text={"Delete"}
+                                    onClick={() =>
+                                      setInitialState(
+                                        (prev: InitialInventoryState) => ({
+                                          ...prev,
+                                          deleteModal: {
+                                            deleteId:
+                                              initialState.productSelected,
+                                            deleteType: ToDelete.PRODUCT,
+                                          },
+                                        })
+                                      )
+                                    }
+                                  />
+                                )}
+                                <PrimaryButton
+                                  text={
+                                    initialState.editProduct ? "Cancel" : "Edit"
+                                  }
+                                  onClick={() =>
+                                    setInitialState(
+                                      (prev: InitialInventoryState) =>
+                                        initialState.editProduct
+                                          ? {
+                                              ...prev,
+                                              editProduct: !prev.editProduct,
+                                              viewProduct: !prev.viewProduct,
+                                            }
+                                          : {
+                                              ...prev,
+                                              editProduct: true,
+                                              viewProduct: false,
+                                            }
+                                    )
+                                  }
+                                />
+                                {initialState.editProduct && (
+                                  <PrimaryButton
+                                    text={"Save"}
+                                    type="submit"
+                                    onClick={(e: any) => {
+                                      e.preventDefault();
+                                      productFormik.handleSubmit();
+                                    }}
+                                  />
+                                )}
+                              </div>
+                            </div>
                             <ProductForm
                               formik={productFormik}
                               initialState={initialState}
@@ -530,6 +617,164 @@ const Products = () => {
         }
         onClick={() => deleteFunction()}
       />
+      {initialState.stocksView && (
+        <Drawer
+          show={initialState.stocksView}
+          setShow={() =>
+            setInitialState((prev: InitialInventoryState) => ({
+              ...prev,
+              stocksView: false,
+              productSelected: "",
+            }))
+          }
+        >
+          <div className="p-3">
+            <div className="flex justify-between">
+              <p className="font-extrabold text-2xl">Stocks</p>
+              <FilterIcon
+                onClick={() =>
+                  setInitialState((prev: InitialInventoryState) => ({
+                    ...prev,
+                    stocksFilter: !prev.stocksFilter,
+                  }))
+                }
+                className={
+                  initialState.stocksFilter
+                    ? "bg-gray-200 border-2 border-red-100 p-0.5 rounded-full"
+                    : ""
+                }
+              />
+            </div>
+            <div className="mb-2 pb-2 border-b-2 border-black">
+              <p>Current Stock: {initialState.currentStock}</p>
+            </div>
+            {initialState.stocksFilter && (
+              <>
+                <div className="flex justify-between">
+                  <div>
+                    <Datepicker
+                      label={"From Date"}
+                      type="Individual"
+                      value={initialState.stockDates.fromDate}
+                      onChange={(e: any) =>
+                        setInitialState((prev: InitialInventoryState) => ({
+                          ...prev,
+                          stockDates: {
+                            fromDate: e.target.value,
+                            toDate: prev.stockDates.toDate,
+                          },
+                        }))
+                      }
+                    />
+                  </div>
+                  <div>
+                    <Datepicker
+                      label={"To Date"}
+                      type="Individual"
+                      value={initialState.stockDates.toDate}
+                      onChange={(e: any) =>
+                        setInitialState((prev: InitialInventoryState) => ({
+                          ...prev,
+                          stockDates: {
+                            fromDate: prev.stockDates.fromDate,
+                            toDate: e.target.value,
+                          },
+                        }))
+                      }
+                    />
+                  </div>
+                </div>
+                <div className={`flex justify-end mt-2 `}>
+                  <PrimaryButton
+                    onClick={() =>
+                      getStocksOfProduct(initialState.productSelected)
+                    }
+                    text={"Filter"}
+                  />
+                </div>
+              </>
+            )}
+            <div>
+              <RadioGroup
+                value={initialState.inventoryUpdateType}
+                onChange={(e) =>
+                  setInitialState((prev: InitialInventoryState) => ({
+                    ...prev,
+                    inventoryUpdateType: e,
+                  }))
+                }
+                className="border-2 rounded-lg flex w-full"
+              >
+                <RadioGroup.Option
+                  value="REMOVE"
+                  className={`w-full cursor-pointer
+                      ${
+                        initialState.inventoryUpdateType === "REMOVE"
+                          ? "bg-red-200 text-red-500"
+                          : ""
+                      }`}
+                >
+                  REMOVE
+                </RadioGroup.Option>
+                <RadioGroup.Option
+                  value="ADD"
+                  className={`w-full cursor-pointer
+                      ${
+                        initialState.inventoryUpdateType === "ADD"
+                          ? "bg-green-200 text-green-500"
+                          : ""
+                      }`}
+                >
+                  ADD
+                </RadioGroup.Option>
+              </RadioGroup>
+              <div>
+                <input
+                  type="number"
+                  onChange={(e) =>
+                    setInitialState((prev: InitialInventoryState) => ({
+                      ...prev,
+                      inventoryQuantity: Number(e.target.value),
+                    }))
+                  }
+                  className={`mt-2 block w-full rounded-md border-1 py-2 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-100 sm:text-sm sm:leading-6 `}
+                />
+              </div>
+              <PrimaryButton text={"Update"} onClick={updateStock} />
+            </div>
+            <table className="table-auto w-full text-center">
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Quantity</th>
+                  <th>Date & Time</th>
+                </tr>
+              </thead>
+              {initialState.stocksOfProduct.map((item: any) => (
+                <tbody>
+                  <tr>
+                    <td
+                      className={`
+                     ${
+                       item.actionType === "REMOVE"
+                         ? "bg-red-200 text-red-500"
+                         : "bg-green-200 text-green-500"
+                     }
+                  `}
+                    >
+                      {item.actionType}
+                    </td>
+                    <td>{item.quantityModified}</td>
+                    <td>
+                      {moment(item.createdAt).format("DD/MM/YYYY, HH:mm")}
+                    </td>
+                  </tr>
+                </tbody>
+              ))}
+            </table>
+          </div>
+        </Drawer>
+      )}
     </>
   );
 };

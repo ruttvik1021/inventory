@@ -31,6 +31,9 @@ const inventoryUrls = {
   addProduct: "/api/add/product",
   updateProduct: "/api/update/product",
   deleteProduct: "/api/delete/product",
+  stockByProduct: "/api/getStockHistory",
+  removeStockURL: "/api/remove/stocks",
+  addStockURL: "/api/add/stocks",
 };
 
 export { baseUrls, authUrls, inventoryUrls };
