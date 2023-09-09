@@ -26,12 +26,7 @@ const CreateCategory = ({
           />
         </div>
         <div className="flex justify-between mt-2 p-1 gap-2">
-          {initialState.editCategory && (
-            <DeleteButton
-              text={"Delete"}
-              onClick={() => deleteCategoryById(initialState.categorySelected)}
-            />
-          )}
+          
           <PrimaryButton
             text={initialState.editCategory ? "Update" : "Create"}
             onClick={(e: any) => {
