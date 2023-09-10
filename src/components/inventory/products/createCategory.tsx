@@ -32,6 +32,7 @@ const CreateCategory = ({
               e.preventDefault();
               formik.handleSubmit();
             }}
+            className="w-full"
           />
         </div>
       </div>
