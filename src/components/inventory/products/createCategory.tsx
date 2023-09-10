@@ -26,14 +26,12 @@ const CreateCategory = ({
           />
         </div>
         <div className="flex justify-between mt-2 p-1 gap-2">
-          
           <PrimaryButton
             text={initialState.editCategory ? "Update" : "Create"}
             onClick={(e: any) => {
               e.preventDefault();
               formik.handleSubmit();
             }}
-            className={!initialState.editCategory ? "w-full" : ""}
           />
         </div>
       </div>
